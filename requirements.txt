@@ -1,0 +1,6 @@
+dnspython
+netaddr
+lxml
+argparse
+dnspython
+requests
