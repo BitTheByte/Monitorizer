@@ -1,5 +1,5 @@
 # Monitorizer
-![](https://i.ibb.co/K26yxmB/Untitled-1.png)  
+![](https://i.ibb.co/wSgcKfx/Artboard-1.png)  
 Subdomain monitoring framework inspired by [subalert](https://github.com/yassineaboukir/sublert) project
 
 # Setting up the environment
