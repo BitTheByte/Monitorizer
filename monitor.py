@@ -35,7 +35,7 @@ while 1:
 
 			for new in diff:
 				monitorizer.log("Found: %s" % new)
-				monitorizer.slackmsg(msg=" ::: %s " % new)
+				monitorizer.slackmsg(msg="Found: %s " % new)
 
 		monitorizer.clean_temp()
 		time = datetime.today()
