@@ -20,7 +20,7 @@ This tool requires a slack workspace to report the findings
 You need to edit the `monitor.py` script
 ```python
 monitorizer.set_slack_channel("GLDXXXXX") # change this to your channel id
-monitorizer.set_slack_token("xoxb-XXXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXXXXXXXXX") # change this to your bot user id 
+monitorizer.set_slack_token("xoxb-XXXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXXXXXXXXX") # change this to your bot user Oauth token
 ```
 For more informations visit: https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens  
 
