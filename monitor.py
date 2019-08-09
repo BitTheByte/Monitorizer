@@ -3,6 +3,7 @@ from datetime import datetime
 from time import sleep
 import monitorizer
 
+
 monitorizer.set_slack_channel("GLDXXXXX")
 monitorizer.set_slack_token("xoxb-XXXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXXXXXXXXX")
 
@@ -34,8 +35,9 @@ while 1:
 				diff =  newscan - oldscan
 
 			for new in diff:
-				monitorizer.log("Found: %s" % new)
-				monitorizer.slackmsg(msg="Found: %s " % new)
+				if not monitorizer.NXDOMAIN(new):
+					monitorizer.log("Found: %s" % new)
+					monitorizer.slackmsg(msg="Found: %s " % new)
 
 		monitorizer.clean_temp()
 		time = datetime.today()

@@ -1,6 +1,7 @@
 from slackclient import SlackClient
 from datetime import datetime
 from .helpers import *
+import dns.resolver
 import glob
 
 
@@ -13,6 +14,13 @@ def set_slack_channel(c):
 def set_slack_token(t):
 	global slack_token
 	slack_token = t
+
+def NXDOMAIN(host):
+	try:
+		dns.resolver.query(host)
+		return 0
+	except dns.resolver.NXDOMAIN as e:
+		return 1
 
 def mutliscan(scanners,host,output=""):
 	generators = []
