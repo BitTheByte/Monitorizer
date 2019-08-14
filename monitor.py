@@ -43,7 +43,7 @@ while 1:
 		time = datetime.today()
 		future = datetime(time.year,time.month,time.day,2,0)
 		if time.hour >= 2:
-		    future += timedelta(days=1)
+		    future += timedelta(hours=12)
 		monitorizer.log("next scan after {} second(s)".format( (future-time).seconds) )
 		sleep((future-time).seconds)
 
