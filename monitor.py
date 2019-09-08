@@ -19,7 +19,7 @@ monitorizer.slackmsg("Monitorizer framework v1 started :tada:")
 while 1:
 	try:
 		for target in [t.strip() for t in open("watch_list","r").readlines()]:
-			if not target: break
+			if not target: continue
 
 			report_name = str(datetime.now().strftime("%Y%m%d_%s"))
 			report_path = "reports/%s_%s" % (target,report_name)
