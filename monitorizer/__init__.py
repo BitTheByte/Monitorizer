@@ -24,7 +24,7 @@ def NXDOMAIN(host):
 
 def mutliscan(scanners,host,output=""):
 	generators = []
-	subdomains = []
+	subdomains = set()
 	for scanner in scanners:
 		scanner_start_time = datetime.now()
 		generators.append(retattr(
@@ -37,10 +37,10 @@ def mutliscan(scanners,host,output=""):
 	for generator in generators:
 		for subdomain in generator.result:
 			if host in subdomain:
-				subdomains.append(subdomain.strip().lower())
+				subdomains.add(subdomain.strip().lower())
 
 	open(output,'w').write('\n'.join(subdomains))
-	return set(subdomains)
+	return subdomains
 
 def read_reports(target,exclude=[]):
 	result = []
