@@ -67,9 +67,6 @@ $ screen -dmS monitorizer bash -c 'python monitor.py'
 ```
 
 Now monitorizer should be working at the background to view the logs just run
-```
-$ cat log.txt
-```
 
 # TODO
 - Windows support
