@@ -3,6 +3,7 @@ import subprocess
 import platform
 import signal
 import json
+import stat
 import sys
 import os
 
@@ -24,7 +25,8 @@ def first_run():
 
 	chmod_tools = ['./ext/amass/amass','./ext/subfinder/subfinder']
 	for tool in chmod_tools:
-		os.chmod(tool, 777)
+		st = os.stat(tool)
+		os.chmod(tool, st.st_mode | stat.S_IEXEC)
 
 def run_and_return_output(cmd,output):
 	osrun(cmd)
