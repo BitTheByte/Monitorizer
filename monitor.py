@@ -3,22 +3,39 @@ from datetime import datetime
 from time import sleep
 import monitorizer
 
+monitorizer.banner()
+monitorizer.first_run()
 
-monitorizer.set_slack_channel("GLDXXXXX")
-monitorizer.set_slack_token("xoxb-XXXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXXXXXXXXX")
 
 scanners = [
-	monitorizer.subfinder,
-	monitorizer.sublist3r,
-	monitorizer.dnsrecon,
-	monitorizer.dnscan,
-	monitorizer.amass,
+	"subfinder",
+	"sublist3r",
+	"dnsrecon",
+	"dnscan",
+	"amass",
+	#"subbrute" - not recommended
 ]
 
-monitorizer.slackmsg("Monitorizer framework v1 started :tada:")
+
+if monitorizer.os.path.isfile(monitorizer.args.watch):
+	watch_list = set([t.strip() for t in open(monitorizer.args.watch,"r").readlines()])
+	monitorizer.log("Reading targets from file: %s" % monitorizer.args.watch)
+else:
+	watch_list = set([t.strip() for t in monitorizer.args.watch.split(",")])
+	monitorizer.log("Watching targets: %s" % ','.join(watch_list))
+
+if monitorizer.args.scanners != "all":
+	scanners = set([t.strip() for t in monitorizer.args.scanners.split(",")])
+	monitorizer.log("Using scanners: %s" % ','.join(scanners))
+else:
+	monitorizer.log("Using all scanners: %s" % ','.join(scanners))
+
+
+monitorizer.slackmsg("Monitorizer framework v1.1 started :tada:")
+
 while 1:
 	try:
-		for target in [t.strip() for t in open("watch_list","r").readlines()]:
+		for target in watch_list:
 			if not target: continue
 
 			report_name = str(datetime.now().strftime("%Y%m%d_%s"))
@@ -29,24 +46,24 @@ while 1:
 			oldscan = monitorizer.read_reports(target,exclude=[report_name])
 
 			if not len(oldscan):
-				monitorizer.log("<{}> first Scan".format(target))
+				monitorizer.log("<{}> no previous records".format(target))
 				diff = []
 			else:
 				diff =  newscan - oldscan
 
 			for new in diff:
-				if not monitorizer.NXDOMAIN(new):
-					monitorizer.log("Found: %s" % new)
+				if not monitorizer.nxdomain(new):
+					monitorizer.log("new subdomain: %s" % new)
 					monitorizer.slackmsg(msg="Found: %s " % new)
 
 		monitorizer.clean_temp()
 		time = datetime.today()
 		future = datetime(time.year,time.month,time.day,2,0)
 		if time.hour >= 2:
-		    future += timedelta(hours=12)
-		monitorizer.log("next scan after {} second(s)".format( (future-time).seconds) )
+		    future += timedelta(hours=8)
+		monitorizer.log("next scan after {} hour(s)".format( int(float((future-time).seconds)/60/60)) )
 		sleep((future-time).seconds)
 
 	except Exception as e:
+		monitorizer.log("FATEL ERROR: %s" % str(e))
 		monitorizer.slackmsg("FATEL ERROR: %s" % str(e))
-

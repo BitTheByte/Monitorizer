@@ -4,3 +4,4 @@ lxml
 argparse
 dnspython
 requests
+colorama

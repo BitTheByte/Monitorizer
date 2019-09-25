@@ -1,48 +1,54 @@
 from slackclient import SlackClient
+from colorama import Fore,init
 from datetime import datetime
-from .helpers import *
+from .functions import *
 import dns.resolver
+import random
 import glob
 
 
-slack_channel = None
-slack_token   = None
+config = read_config(args.config)
 
-def set_slack_channel(c):
-	global slack_channel
-	slack_channel = c
-def set_slack_token(t):
-	global slack_token
-	slack_token = t
+def nxdomain(host):
 
-def NXDOMAIN(host):
+	"""
+		Check for NXDOMAINS  - https://www.dnsknowledge.com/whatis/nxdomain-non-existent-domain-2
+	"""
 	try:
 		dns.resolver.query(host)
 		return 0
 	except dns.resolver.NXDOMAIN as e:
 		return 1
 
-def mutliscan(scanners,host,output=""):
-	generators = []
-	subdomains = set()
-	for scanner in scanners:
-		scanner_start_time = datetime.now()
-		generators.append(retattr(
-			function = scanner,
-			result   = scanner(host))
-		)
-		scanner_end_time = datetime.now()
-		log("<{}> ::: {} Finished, T: {}".format(host,scanner,scanner_end_time - scanner_start_time))
+def mutliscan(scanners,target,output=""):
 
-	for generator in generators:
-		for subdomain in generator.result:
-			if host in subdomain:
+	"""
+		Wrapper around scan_with function to scan with multiple tools 
+	"""
+	subdomains = set()
+
+	for tool in scanners:
+		scanner_start_time = datetime.now()
+
+		result = scan_with(tool, target)
+
+		scanner_end_time = datetime.now()
+		log("<{}> ::: {} Finished, T: {}".format(target,tool,scanner_end_time - scanner_start_time))
+		
+		for subdomain in result:
+			if target in subdomain:
 				subdomains.add(subdomain.strip().lower())
 
-	open(output,'w').write('\n'.join(subdomains))
+	if output:
+		open(output,'w').write('\n'.join(subdomains))
+	
 	return subdomains
 
 def read_reports(target,exclude=[]):
+
+	"""
+		Reading reports stored in HOME/reports
+	"""
 	result = []
 	for path in glob.glob("reports/{}_*".format(target)):
 		for e in exclude:
@@ -53,49 +59,89 @@ def read_reports(target,exclude=[]):
 				result.append(subdomain)
 	return set(result)
 
-def subfinder(host,threads = 300):
-	output  = "temp/%s_subfinder.txt" % host
-	osrun(oscmd('subfinder') % (host,output,threads))
-	return parse(output)
+def scan_with(name,target):
 
-def dnscan(host,wordlist = "monitorizer/dnscan/subdomains-10000.txt"):
-	output   = "temp/%s_dnscan.txt" % host
-	osrun(oscmd('dnscan') % (host,wordlist,output))
-	return parse(output)
+	"""
+		Main scanning function to construct external tools running commands
+	"""
+	output = "temp/%s_%s" % (target,name)
+	if not name in config: return []
 
-def dnsrecon(host,threads = 100, wordlist = "monitorizer/dnsrecon/subdomains-top1mil.txt"):
-	output   = "temp/%s_dnsrecon.txt" % host
-	osrun(oscmd('dnsrecon') % (host,wordlist,threads,output))
-	return parse(output)
+	formats = config[name]['formats']
+	formats.update({'target':target,'output':output})
+	
+	cmd = config[name]['cmd'].format(**formats)
 
-def sublist3r(host,threads = 300):
-	output  = "temp/%s_sublist3r.txt" % host
-	osrun(oscmd('sublist3r') % (host,output,threads))
-	return parse(output)
-
-def subbrute(host):
-	output = "temp/%s_subbrute.txt" % host
-	osrun(oscmd('subbrute')  % (host,output))
-	return parse(output)
-
-def amass(host):
-	output = "temp/%s_amass.txt" % host
-	osrun(oscmd('amass')  % (host,output))
-	return parse(output)
+	return run_and_return_output(cmd,output)
 
 def slackmsg(msg):
-	sc = SlackClient(slack_token)
-	sc.api_call(
-		"chat.postMessage",
-		channel=slack_channel,
-		text=msg
-	)
+
+	"""
+		Slack Reporting
+	"""
+
+	if local_report:
+		open("results.txt","a").write(msg)
+
+	else:
+
+		sc = SlackClient(config['settings']['slack_token'])
+		sc.api_call(
+			"chat.postMessage",
+			channel=config['settings']['slack_channel'],
+			text=msg
+		)
 
 def clean_temp():
+
+	"""
+		Removes all files at HOME/temp/*
+	"""
 	for i in glob.glob("temp/*"):
 		os.unlink(i)
 
 def log(msg):
-	msg = "Monitorizer: %s" % msg
-	open("log.txt",'a+').write(msg+"\n")
+	msg = " {r}Monitorizer:{w} {msg}".format(
+			b=Fore.BLUE,
+			w=Fore.WHITE,
+			r=Fore.LIGHTRED_EX,
+			msg=msg
+		)
 	print(msg)
+
+def rand_color():
+	return random.choice([
+			Fore.RED,
+			Fore.GREEN,
+			Fore.YELLOW,
+			Fore.WHITE,
+			Fore.CYAN,
+		])
+
+def banner():
+	os.system('cls' if os.name == 'nt' else 'clear')
+	print ("""
+ {r} ___ ___             __ __              __                  
+ {r}|   Y   .{w}-----.-----|__|  |_.-----.----|__.-----.-----.----.
+ {r}|.      |{w}  _  |     |  |   _|  _  |   _|  |-- __|  -__|   _|
+ {r}|. \_/  |{w}_____|__|__|__|____|_____|__| |__|_____|_____|__|  
+ {r}|:  |   | {b}The ultimate subdomain monitorization framework                                                 
+ {r}|::.|:. |                    {y}v1.1                 
+ {r}`--- ---'                                                             
+                                                             
+""".format(
+r = Fore.RED,
+w = Fore.WHITE,
+y = Fore.YELLOW,
+g = Fore.GREEN,
+b = Fore.LIGHTBLUE_EX
+))
+
+	if local_report:
+		log("Slack reporting is disabled due to missing tokens results will be stored at results.txt")
+
+init(autoreset=1)
+local_report = False
+if not config['settings']['slack_token'] or not config['settings']['slack_channel']:
+	local_report = True
+	

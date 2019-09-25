@@ -1,6 +1,0 @@
-subfinder_linux: ./monitorizer/subfinder/subfinder -d %s -o %s -silent -v -t %i
-dnscan_linux: python monitorizer/dnscan/dnscan.py -d %s -w %s -o %s
-sublist3r_linux: python monitorizer/sublist3r/sublist3r.py -d %s -o %s -t %i -v
-subbrute_linux: python monitorizer/subbrute/subbrute.py %s -o %s -r monitorizer/subbrute/resolvers.txt -s monitorizer/subbrute/names.txt
-amass_linux: ./monitorizer/amass/amass enum -d %s -o %s -src -brute
-dnsrecon_linux: python monitorizer/dnsrecon/dnsrecon.py -d %s -D %s -t brt --threads %i -c %s

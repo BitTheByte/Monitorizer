@@ -5,7 +5,7 @@ Subdomain monitoring framework inspired by [subalert](https://github.com/yassine
 # Setting up the environment
 You need:
 - Python  2.7.16
-- Linux server e.g(Amanzon EC2)
+- Linux server e.g(Amanzon EC2) [64bit]
 
 Before we start you need to install the requirements
 ```
@@ -17,36 +17,43 @@ After installing the requirements now you're ready to go
 
 This tool requires a slack workspace to report the findings  
 
-You need to edit the `monitor.py` script
-```python
-monitorizer.set_slack_channel("GLDXXXXX") # change this to your channel id
-monitorizer.set_slack_token("xoxb-XXXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXXXXXXXXX") # change this to your bot user Oauth token
+You need to edit the `config/default.json` 
+```json
+
+{
+	"settings":{
+		"slack_channel":"change this to your channel id",
+		"slack_token":"change this to your bot user Oauth token",
+	}
+}
 ```
 For more informations visit: https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens  
 
   
 
-After editing the python file you just need to edit `watch_list` file to your targets then you're ready to go
 ```
-$ python monitor.py
+$ python monitor.py -w google.com,bing.com
+```
+```
+$ python monitor.py -w watch_targets.txt
 ```
 if everything is configured currectly to should see this message on your slack channel
 ![](https://i.ibb.co/ZMjvTsM/image.png)   
 
-Monitorizer supports more than one subdomain enumeration tool to achieve the best result However you could edit `monitor.py` to add or remove the tools as needed
+Monitorizer supports more than one subdomain enumeration tool to achieve the best result
 ```python
 
 scanners = [
-	monitorizer.subfinder, # https://github.com/subfinder/subfinder
-	monitorizer.sublist3r, # https://github.com/aboul3la/Sublist3r
-	monitorizer.dnsrecon,  # https://github.com/darkoperator/dnsrecon
-	monitorizer.dnscan,    # https://github.com/rbsec/dnscan
-	monitorizer.subbrute,  # https://github.com/TheRook/subbrute
-	monitorizer.amass,     # https://github.com/OWASP/Amass
+	subfinder, # https://github.com/subfinder/subfinder
+	sublist3r, # https://github.com/aboul3la/Sublist3r
+	dnsrecon,  # https://github.com/darkoperator/dnsrecon
+	dnscan,    # https://github.com/rbsec/dnscan
+	subbrute,  # https://github.com/TheRook/subbrute
+	amass,     # https://github.com/OWASP/Amass
 ]
 
 ```
-Command lines can be found at `monitorizer/cmd.map`
+command lines can be found at `config/default.json`
 
 # How to run
 
@@ -66,7 +73,5 @@ $ cat log.txt
 
 # TODO
 - Windows support
-- Config file [Wordlists location / slack token / slack channel id]
 - Multithreading support
-- Adding more wordlists
 - Adding more scanners
