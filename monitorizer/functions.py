@@ -37,33 +37,34 @@ def read_config(config_file):
 	return jconfig
 
 def parse(filepath):
-	if not os.path.isfile(filepath): yield ''
-
-	data = open(filepath,'r').readlines()
-	if 'amass' in filepath:
-		for line in data:
-			domain = line.split()[-1].strip()
-			if domain: yield domain
-
-	elif 'dnscan' in filepath:
-		for line in data:
-			if '-' in line:
+	if not os.path.isfile(filepath):
+		yield ''
+	else:
+		data = open(filepath,'r').readlines()
+		if 'amass' in filepath:
+			for line in data:
 				domain = line.split()[-1].strip()
 				if domain: yield domain
 
-	elif 'subfinder' in filepath:
-		for line in data:
-			if line[0] != '.':
-				yield line.strip()
-	elif 'dnsrecon' in filepath:
-		for line in data:
-			if not 'Name' in line:
-				yield line.split(",")[1]
+		elif 'dnscan' in filepath:
+			for line in data:
+				if '-' in line:
+					domain = line.split()[-1].strip()
+					if domain: yield domain
 
-	else:
-		for line in data:
-			if line.strip():
-				yield line.strip()
+		elif 'subfinder' in filepath:
+			for line in data:
+				if line[0] != '.':
+					yield line.strip()
+		elif 'dnsrecon' in filepath:
+			for line in data:
+				if not 'Name' in line:
+					yield line.split(",")[1]
+
+		else:
+			for line in data:
+				if line.strip():
+					yield line.strip()
 
 def signal_handler(sig, frame):
         print('Bye!')
