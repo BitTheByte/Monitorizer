@@ -13,6 +13,7 @@ scanners = [
 	"dnsrecon",
 	"dnscan",
 	"amass",
+	#"aiodnsbrute" - need to be preinstalled :: python3 -m pip install aiodnsbrute
 	#"subbrute" - not recommended
 ]
 

@@ -44,12 +44,13 @@ Monitorizer supports more than one subdomain enumeration tool to achieve the bes
 ```python
 
 scanners = [
-	subfinder, # https://github.com/subfinder/subfinder
-	sublist3r, # https://github.com/aboul3la/Sublist3r
-	dnsrecon,  # https://github.com/darkoperator/dnsrecon
-	dnscan,    # https://github.com/rbsec/dnscan
-	subbrute,  # https://github.com/TheRook/subbrute
-	amass,     # https://github.com/OWASP/Amass
+	aiodnsbrute, # https://github.com/blark/aiodnsbrute (need to be installed)
+	subfinder,   # https://github.com/subfinder/subfinder (included)
+	sublist3r,   # https://github.com/aboul3la/Sublist3r (included)
+	dnsrecon,    # https://github.com/darkoperator/dnsrecon (included)
+	dnscan,      # https://github.com/rbsec/dnscan (included)
+	subbrute,    # https://github.com/TheRook/subbrute (included)
+	amass,       # https://github.com/OWASP/Amass (included)
 ]
 
 ```

@@ -3,14 +3,12 @@
 		"slack_channel":"",
 		"slack_token":""
 	},
-	
 	"subfinder":{
 		"cmd":"./ext/subfinder/subfinder -d {target} -o {output} -silent -v -t {threads}",
 		"formats":{
 			"threads":300
 		}
 	},
-
 	"dnsrecon":{
 		"cmd":"python ext/dnsrecon/dnsrecon.py -d {target} -D {wordlist} -t brt --threads {threads} -c {output} ",
 		
@@ -20,7 +18,6 @@
 		}
 		
 	},
-
 	"dnscan":{
 		"cmd":"python ext/dnscan/dnscan.py -d {target} -w {wordlist} -o {output} -R 8.8.8.8",
 		"formats":{
@@ -28,7 +25,6 @@
 			"wordlist":"wordlists/subdomains-top1mil.txt"
 		}
 	},
-
 	"sublist3r":{
 		"cmd":"python ext/sublist3r/sublist3r.py -d {target} -o {output} -t {threads} -v",
 		"formats":{
@@ -36,7 +32,6 @@
 		}
 		
 	},
-
 	"subbrute":{
 		"cmd":"python ext/subbrute/subbrute.py {target} -o {output} -r {resolvers} -s {wordlist}",
 		"formats":{
@@ -44,12 +39,18 @@
 			"wordlist": "wordlists/names.txt"
 		}
 	},
-
 	"amass":{
 		"cmd": "./ext/amass/amass enum -d {target} -o {output} -src -brute -w {wordlist} -aw {alts_wordlist}",
 		"formats":{
 			"wordlist":"wordlists/namelist.txt",
 			"alts_wordlist":"wordlists/alterations.txt"
+		}
+	},
+	"aiodnsbrute":{
+		"cmd": "aiodnsbrute {target} -w {wordlist} -f {output} -o csv -t {threads}",
+		"formats":{
+			"threads": 1024,
+			"wordlist": "wordlists/mix.txt"
 		}
 	}
 }

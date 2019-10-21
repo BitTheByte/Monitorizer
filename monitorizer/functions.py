@@ -60,7 +60,10 @@ def parse(filepath):
 			for line in data:
 				if not 'Name' in line:
 					yield line.split(",")[1]
-
+		elif 'aiodnsbrute' in filepath:
+			for line in data:
+				if not 'Hostname' in line:
+					yield line.split(",")[0]
 		else:
 			for line in data:
 				if line.strip():
