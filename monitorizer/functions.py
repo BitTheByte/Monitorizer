@@ -19,11 +19,15 @@ def first_run():
 		print("You need 64bit Linux system to run this tool")
 		sys.exit()
 
+	if os.geteuid() != 0:
+		print("Please run this tool as root")
+		sys.exit()
+
 	for dir_name in ['reports','temp']:
 		if not os.path.isdir(dir_name):
 			os.mkdir(dir_name)
 
-	chmod_tools = ['./ext/amass/amass','./ext/subfinder/subfinder']
+	chmod_tools = ['./ext/amass/amass','./ext/subfinder/subfinder','./ext/masscan/masscan']
 	for tool in chmod_tools:
 		st = os.stat(tool)
 		os.chmod(tool, st.st_mode | stat.S_IEXEC)

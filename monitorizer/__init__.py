@@ -2,6 +2,7 @@ from slackclient import SlackClient
 from colorama import Fore,init
 from datetime import datetime
 from .functions import *
+from .scanner import *
 import dns.resolver
 import random
 import glob
@@ -126,7 +127,7 @@ def banner():
  {r}|.      |{w}  _  |     |  |   _|  _  |   _|  |-- __|  -__|   _|
  {r}|. \_/  |{w}_____|__|__|__|____|_____|__| |__|_____|_____|__|  
  {r}|:  |   | {b}The ultimate subdomain monitorization framework                                                 
- {r}|::.|:. |                    {y}v1.1                 
+ {r}|::.|:. |                    {y}v1.2                 
  {r}`--- ---'                                                             
                                                              
 """.format(

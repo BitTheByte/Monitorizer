@@ -49,7 +49,7 @@
 	"aiodnsbrute":{
 		"cmd": "aiodnsbrute {target} -f {output} -o csv -t {threads}",
 		"formats":{
-			"threads": 512,
+			"threads": 512
 		}
 	}
 }

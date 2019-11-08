@@ -1,5 +1,6 @@
 from datetime import timedelta
 from datetime import datetime
+from handlers import on
 from time import sleep
 import monitorizer
 
@@ -32,7 +33,7 @@ else:
 	monitorizer.log("Using all scanners: %s" % ','.join(scanners))
 
 
-monitorizer.slackmsg("Monitorizer framework v1.1 started :tada:")
+on.start()
 
 while 1:
 	try:
@@ -50,21 +51,15 @@ while 1:
 				monitorizer.log("<{}> no previous records".format(target))
 				diff = []
 			else:
-				diff =  newscan - oldscan
-
-			for new in diff:
-				if not monitorizer.nxdomain(new):
-					monitorizer.log("new subdomain: %s" % new)
-					monitorizer.slackmsg(msg="Found: %s " % new)
-
+				targets = newscan - oldscan
+				if targets: on.discover(targets,report_name)
+				
 		monitorizer.clean_temp()
-		time = datetime.today()
-		future = datetime(time.year,time.month,time.day,2,0)
-		if time.hour >= 2:
-		    future += timedelta(hours=8)
-		monitorizer.log("next scan after {} hour(s)".format( int(float((future-time).seconds)/60/60)) )
-		sleep((future-time).seconds)
+		sleep_time_hours = 8
+		monitorizer.log("next scan after {} hour(s)".format( sleep_time_hours ))
+		sleep( 60*60*sleep_time_hours )
 
 	except Exception as e:
 		monitorizer.log("FATEL ERROR: %s" % str(e))
 		monitorizer.slackmsg("FATEL ERROR: %s" % str(e))
+

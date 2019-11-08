@@ -3,5 +3,6 @@ netaddr
 lxml
 argparse
 dnspython
+slackclient
 requests
 colorama
