@@ -69,6 +69,16 @@ $ screen -dmS monitorizer bash -c 'python monitor.py'
 
 Now monitorizer should be working at the background to view the logs just run
 
+# ChangeLog
+```
+1.0: untracked
+1.1: untracked
+1.2: 
+  - Added: New events system  
+  - Added: Support for masscan
+  - Improved: Slack reporting system 
+```
+
 # TODO
 - Windows support
 - Multithreading support
