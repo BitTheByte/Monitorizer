@@ -64,10 +64,8 @@ $ ssh myserver@somewhere.host
 $ ls
 Monitorizer
 $ cd Monitorizer
-$ screen -dmS monitorizer bash -c 'python monitor.py'
+$ screen -dmS monitorizer bash -c 'python monitor.py -w targets.txt'
 ```
-
-Now monitorizer should be working at the background to view the logs just run
 
 # ChangeLog
 ```
