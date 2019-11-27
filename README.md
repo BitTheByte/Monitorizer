@@ -1,5 +1,12 @@
 # Monitorizer
-![](https://i.ibb.co/wSgcKfx/Artboard-1.png)  
+
+<p align="center">
+    <a href="https://twitter.com/BitTheByte">
+      <img src="https://i.ibb.co/9pYWyKR/68747470733a2f2f692e6962622e636f2f775367634b66782f417274626f6172642d312e706e67.png" width="500">
+    </a>
+    <h3 align="center">The ultimate subdomain monitorization framework</h3>
+</p>
+
 Subdomain monitoring framework inspired by [subalert](https://github.com/yassineaboukir/sublert) project
 
 # Setting up the environment
