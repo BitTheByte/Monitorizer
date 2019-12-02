@@ -20,10 +20,10 @@ scanners = [
 
 
 if monitorizer.os.path.isfile(monitorizer.args.watch):
-	watch_list = set([t.strip() for t in open(monitorizer.args.watch,"r").readlines()])
+	_watch_list = 'set([t.strip() for t in open(monitorizer.args.watch,"r").readlines()])'
 	monitorizer.log("Reading targets from file: %s" % monitorizer.args.watch)
 else:
-	watch_list = set([t.strip() for t in monitorizer.args.watch.split(",")])
+	_watch_list = 'set([t.strip() for t in monitorizer.args.watch.split(",")])'
 	monitorizer.log("Watching targets: %s" % ','.join(watch_list))
 
 if monitorizer.args.scanners != "all":
@@ -37,6 +37,7 @@ on.start()
 
 while 1:
 	try:
+		watch_list = eval(_watch_list)
 		for target in watch_list:
 			if not target: continue
 
@@ -55,7 +56,7 @@ while 1:
 				if targets: on.discover(targets,report_name)
 				
 		monitorizer.clean_temp()
-		sleep_time_hours = 8
+		sleep_time_hours = 24
 		monitorizer.log("next scan after {} hour(s)".format( sleep_time_hours ))
 		sleep( 60*60*sleep_time_hours )
 
