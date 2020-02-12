@@ -3,4 +3,4 @@ __pycache__/.*
 config/bitthebyte.json
 reports/*
 temp/*
-test
+test/*

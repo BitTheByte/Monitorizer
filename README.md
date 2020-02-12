@@ -36,11 +36,8 @@ You need to edit the `config/default.json`
 ```
 For more informations visit: https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens  
 
-  
 
-```
-$ python monitor.py -w google.com,bing.com
-```
+
 ```
 $ python monitor.py -w watch_targets.txt
 ```
@@ -74,6 +71,13 @@ $ cd Monitorizer
 $ screen -dmS monitorizer bash -c 'python monitor.py -w targets.txt'
 ```
 
+# Slack Commands
+Monitorizer supports slack commands by mentioning the bot   
+  
+![](https://i.ibb.co/NFL2N7r/image.png)  
+  
+To Enable Slack commands you have to enable [Event Subscriptions](https://api.slack.com/events-api) and set the [Request URL] to http://youip:6969/slack
+
 # ChangeLog
 ```
 1.0: untracked
@@ -81,7 +85,11 @@ $ screen -dmS monitorizer bash -c 'python monitor.py -w targets.txt'
 1.2: 
   - Added: New events system  
   - Added: Support for masscan
-  - Improved: Slack reporting system 
+  - Improved: Slack reporting system
+1.3:
+  - Added: Stack commands
+  - Added: toolkit tracking
+  - Added: codebase tracking
 ```
 
 # TODO

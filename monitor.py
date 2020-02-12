@@ -1,8 +1,9 @@
 from datetime import timedelta
 from datetime import datetime
-from handlers import on
+from events import on
 from time import sleep
 import monitorizer
+
 
 monitorizer.banner()
 monitorizer.first_run()
@@ -23,8 +24,9 @@ if monitorizer.os.path.isfile(monitorizer.args.watch):
 	_watch_list = 'set([t.strip() for t in open(monitorizer.args.watch,"r").readlines()])'
 	monitorizer.log("Reading targets from file: %s" % monitorizer.args.watch)
 else:
-	_watch_list = 'set([t.strip() for t in monitorizer.args.watch.split(",")])'
-	monitorizer.log("Watching targets: %s" % ','.join(watch_list))
+	# TODO: Add some error here
+	pass
+
 
 if monitorizer.args.scanners != "all":
 	scanners = set([t.strip() for t in monitorizer.args.scanners.split(",")])

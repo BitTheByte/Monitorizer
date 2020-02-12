@@ -4,11 +4,26 @@ from datetime import datetime
 from .functions import *
 from .scanner import *
 import dns.resolver
+import requests
 import random
 import glob
 
+metadata = {
+    "version":{
+        "monitorizer":"1.3",
+        "toolkit":"1.0"
+    }
+}
 
-config = read_config(args.config)
+config  = read_config(args.config)
+
+def metadata_github():
+    try:
+		return requests.get("https://raw.githubusercontent.com/BitTheByte/Monitorizer/master/version").json()
+    except Exception as e:
+		print(e)
+		return {}
+
 
 def nxdomain(host):
 
@@ -75,7 +90,7 @@ def scan_with(name,target):
 
 	return run_and_return_output(cmd,output)
 
-def slackmsg(msg):
+def slackmsg(msg,channel_id=''):
 
 	"""
 		Slack Reporting
@@ -89,7 +104,7 @@ def slackmsg(msg):
 		sc = SlackClient(config['settings']['slack_token'])
 		sc.api_call(
 			"chat.postMessage",
-			channel=config['settings']['slack_channel'],
+			channel= channel_id if channel_id else config['settings']['slack_channel'],
 			text=msg
 		)
 
@@ -127,7 +142,7 @@ def banner():
  {r}|.      |{w}  _  |     |  |   _|  _  |   _|  |-- __|  -__|   _|
  {r}|. \_/  |{w}_____|__|__|__|____|_____|__| |__|_____|_____|__|  
  {r}|:  |   | {b}The ultimate subdomain monitorization framework                                                 
- {r}|::.|:. |                    {y}v1.2                 
+ {r}|::.|:. |             {y}codebase: v{cversion}, toolkit: v{tversion}                 
  {r}`--- ---'                                                             
                                                              
 """.format(
@@ -135,7 +150,9 @@ r = Fore.RED,
 w = Fore.WHITE,
 y = Fore.YELLOW,
 g = Fore.GREEN,
-b = Fore.LIGHTBLUE_EX
+b = Fore.LIGHTBLUE_EX,
+cversion=metadata["version"]["monitorizer"],
+tversion=metadata["version"]["toolkit"],
 ))
 
 	if local_report:

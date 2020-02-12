@@ -1,4 +1,5 @@
 import monitorizer
+import events.app_mention as SlackApi
 
 def discover(targets,report_name):
 	msg =  "Monitorizer Report ::: %s\n" % report_name
@@ -12,5 +13,9 @@ def discover(targets,report_name):
 	msg += "```"
 	monitorizer.slackmsg(msg=msg)
 
+
+	
 def start():
-	monitorizer.slackmsg("Monitorizer framework v1.2 started :tada:")
+	SlackApi.run_server()
+	monitorizer.log("Started events server at http://0.0.0.0:6969/slack")
+	monitorizer.slackmsg("Monitorizer framework v1.3 started :tada:")

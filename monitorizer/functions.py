@@ -13,6 +13,7 @@ def osrun(cmd):
 		subprocess.check_call(cmd,stdout=open(os.devnull, 'a+'),stderr=subprocess.STDOUT,shell=True)
 	except:
 		pass
+	
 
 def first_run():
 	if platform.architecture()[0].lower() != '64bit':
