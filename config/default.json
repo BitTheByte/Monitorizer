@@ -4,7 +4,7 @@
 		"slack_token":""
 	},
 	"subfinder":{
-		"cmd":"./ext/subfinder/subfinder -d {target} -o {output} -silent -v -t {threads}",
+		"cmd":"./ext/subfinder/subfinder -d {target} -o {output} -v -t {threads}",
 		"formats":{
 			"threads":300
 		}
