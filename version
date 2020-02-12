@@ -1,1 +1,6 @@
-1.2
+{
+    "version":{
+        "monitorizer":"1.2",
+        "toolkit":"1.0"
+    }
+}
