@@ -4,7 +4,7 @@
         "toolkit":"1.0"
     },
     "changelog":{
-        "monitorizer":"Added: New commands\nImproved: Visual appearance]nFixed: Update message",
+        "monitorizer":"Added: New commands\nImproved: Visual appearance]\nFixed: Update message",
         "toolkit":"Example message for toolkit update template"
     }
 }
