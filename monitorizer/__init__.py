@@ -3,6 +3,7 @@ from colorama import Fore,init
 from datetime import datetime
 from .functions import *
 from .scanner import *
+import monitorizer.flags as flags
 import dns.resolver
 import requests
 import random
@@ -10,10 +11,11 @@ import glob
 
 metadata = {
     "version":{
-        "monitorizer":"1.3",
+        "monitorizer":"1.4",
         "toolkit":"1.0"
     }
 }
+
 
 config  = read_config(args.config)
 
@@ -46,18 +48,29 @@ def mutliscan(scanners,target,output=""):
 	for tool in scanners:
 		scanner_start_time = datetime.now()
 
+		flags.running_tool   = tool
+		flags.current_target = target
+
 		result = scan_with(tool, target)
 
 		scanner_end_time = datetime.now()
-		log("<{}> ::: {} Finished, T: {}".format(target,tool,scanner_end_time - scanner_start_time))
+		time_taken = (scanner_end_time - scanner_start_time).seconds
+
+		flags.timings[tool] = time_taken
+
+
+		log("<{}> ::: {} Finished, T: {}".format(target,tool,time_taken))
 		
 		for subdomain in result:
 			if target in subdomain:
 				subdomains.add(subdomain.strip().lower())
+		
+
 
 	if output:
 		open(output,'w').write('\n'.join(subdomains))
-	
+
+	flags.timings = {}
 	return subdomains
 
 def read_reports(target,exclude=[]):

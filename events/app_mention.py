@@ -8,18 +8,21 @@ import sys,os
 import logging
 import threading
 import monitorizer
+import monitorizer.flags as flags
+import json
 
-app        = Flask("HELLO")
+
+app        = Flask("Slack Events Server")
 watchlist  = [t.strip() for t in open(monitorizer.args.watch,"r").readlines()]
 seen       = []
 
 def is_alive(url):
     try:
-        requests.head('https://' + url)
+        requests.head('https://' + url,timeout=25)
         return 1
     except:
         try:
-            requests.head('http://'  + url)
+            requests.head('http://'  + url,timeout=25)
             return 1
         except:
             return 0
@@ -34,24 +37,24 @@ def _help(args):
     else:
         code_base_update = 0
 
-    if metedata_local["version"]["monitorizer"] < metadata_github["version"]["monitorizer"]:
+    if metedata_local["version"]["toolkit"] < metadata_github["version"]["toolkit"]:
         toolkit_update  = 1
     else:
         toolkit_update  = 0
 
     if code_base_update == True and toolkit_update == False:
-        return templates.help_msg.format( warning0=templates.update_msg.format( metadata_github['changelog']['monitorizer'], warning1="" ))
+        return templates.help_msg.replace("{warning1}\n","").format(warning0=templates.update_msg.format(metadata_github['changelog']['monitorizer']))
 
     if toolkit_update == True and code_base_update == False:
-        return templates.help_msg.format( warning0=templates.update_msg.format( metadata_github['changelog']['toolkit'], warning1="" ))
+        return templates.help_msg.replace("{warning1}\n","").format(warning0=templates.update_msg.format(metadata_github['changelog']['toolkit']))
 
     if toolkit_update == True and code_base_update == True:
         return templates.help_msg.format(
-            warning0=templates.update_msg.format( metadata_github['changelog']['monitorizer']),
-            warning1=templates.update_msg.format( metadata_github['changelog']['toolkit'])
+            warning0=templates.update_msg.format(metadata_github['changelog']['monitorizer']),
+            warning1=templates.update_msg.format(metadata_github['changelog']['toolkit'])
             )
 
-    return templates.help_msg.format( warning0="" ,warning1="")
+    return templates.help_msg.replace("{warning0}\n","").replace("{warning1}\n","")
 
 
 def _add(args):
@@ -77,14 +80,38 @@ def _remove(args):
 
 def _list(args):
     msg = ""
-    for target in [t.strip() for t in open(monitorizer.args.watch,"r").readlines()]:
+    targets = [t.strip() for t in open(monitorizer.args.watch,"r").readlines()]
+    if len(targets) == 0:
+        return "Watchlist is empty"
+    for target in targets:
         msg += templates.target.format(target) + "\n"
     return msg[:-1]
 
 def _ping(args):
     return "pong"
 
+def _freq(args):
+    if len(args) == 0:
+        return "Scanning frequency is one scan every {} hour(s)".format(flags.sleep_time)
 
+    if str(args[0]).isdigit():
+        flags.sleep_time = int(args[0])
+        return "Scanning frequency updated to one scan every {} hour(s)".format(args[0])
+    else:
+        return "Invalid number"
+
+
+def _status(args):
+    if flags.status == 'running':
+        return templates.run_status_msg.format(
+            status         = flags.status,
+            target         = flags.current_target,
+            tool           = flags.running_tool,
+            report_name    = flags.report_name,
+            time_data      = json.dumps(flags.timings, indent=4, sort_keys=True)
+        )
+    else:
+        return templates.stop_status_msg
 
 
 registered_commands = {
@@ -93,9 +120,10 @@ registered_commands = {
     "add":    _add,
     'remove': _remove,
     'list':   _list,
+    'status': _status,
     'ping':   _ping,
+    'freq':   _freq,
 }
-
 
 
 def mention_handler(data):
@@ -121,13 +149,19 @@ def mention_handler(data):
     if message == []:
         return "event->app_mention::empty_message"
 
-    parent_command    = message[0]
-    if len(parent_command) > 1:
-        command_arguments = message[1::]
+    parent_command = message[0]
+    if len(parent_command.split(" ")) == 0:
+        if len(parent_command) > 1:
+            command_arguments = message[1::]
+        else:
+            command_arguments = []
     else:
-        command_arguments = []
+        commands          = parent_command.split(" ")
+        parent_command    = commands[0]
+        command_arguments = commands[1::]
 
     if parent_command in registered_commands.keys():
+        
         response = registered_commands[parent_command]
         if type(response) == types.FunctionType:
             response = response(command_arguments)

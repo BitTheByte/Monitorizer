@@ -1,10 +1,10 @@
 {
     "version":{
-        "monitorizer":"1.3",
+        "monitorizer":"1.4",
         "toolkit":"1.0"
     },
     "changelog":{
-        "monitorizer":"Example message for codebase update template",
+        "monitorizer":"Added: New commands\nImproved: Visual appearance]nFixed: Update message",
         "toolkit":"Example message for toolkit update template"
     }
 }

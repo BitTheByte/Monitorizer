@@ -1,3 +1,4 @@
+import monitorizer.flags as flags
 from datetime import timedelta
 from datetime import datetime
 from events import on
@@ -44,9 +45,11 @@ while 1:
 			if not target: continue
 
 			report_name = str(datetime.now().strftime("%Y%m%d_%s"))
+			flags.report_name = report_name
 			report_path = "reports/%s_%s" % (target,report_name)
 
 			monitorizer.log("<{}> ::: {}".format(target,report_path))
+			flags.status = "running"
 			newscan = monitorizer.mutliscan(scanners, target, output=report_path)
 			oldscan = monitorizer.read_reports(target,exclude=[report_name])
 
@@ -58,9 +61,9 @@ while 1:
 				if targets: on.discover(targets,report_name)
 				
 		monitorizer.clean_temp()
-		sleep_time_hours = 24
-		monitorizer.log("next scan after {} hour(s)".format( sleep_time_hours ))
-		sleep( 60*60*sleep_time_hours )
+		flags.status = "not running"
+		monitorizer.log("next scan after {} hour(s)".format( flags.sleep_time ))
+		sleep( 5 )#60*60*flags.sleep_time )
 
 	except Exception as e:
 		monitorizer.log("FATEL ERROR: %s" % str(e))
