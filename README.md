@@ -90,6 +90,10 @@ To Enable Slack commands you have to enable [Event Subscriptions](https://api.sl
   - Added: Stack commands
   - Added: toolkit tracking
   - Added: codebase tracking
+1.4:
+  - Added: New commands
+  - Improved: Message spacings 
+  - Fixed: Update Message
 ```
 
 # TODO
