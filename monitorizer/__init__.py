@@ -12,7 +12,7 @@ import glob
 metadata = {
     "version":{
         "monitorizer":"1.4",
-        "toolkit":"1.0"
+        "toolkit":"1.1"
     }
 }
 
