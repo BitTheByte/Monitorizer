@@ -18,4 +18,4 @@ def discover(targets,report_name):
 def start():
 	SlackApi.run_server()
 	monitorizer.log("Started events server at http://0.0.0.0:6969/slack")
-	monitorizer.slackmsg("Monitorizer framework v1.3 started :tada:")
+	monitorizer.slackmsg("Monitorizer framework v{ver} started :tada:".format(ver=monitorizer.metadata["version"]["monitorizer"]))
