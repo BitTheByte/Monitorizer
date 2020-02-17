@@ -1,10 +1,10 @@
 {
     "version":{
         "monitorizer":"1.4",
-        "toolkit":"1.0"
+        "toolkit":"1.1"
     },
     "changelog":{
         "monitorizer":"Added: New commands\nImproved: Visual appearance]\nFixed: Update message",
-        "toolkit":"Example message for toolkit update template"
+        "toolkit":"Toolkit 1.0 was shipped with amass [3.4.3] with the wrong architecture type. this is a fix for the previous issue and update for amass to [3.4.4]\nAutomatic toolkit updates are into consideration :)"
     }
 }
