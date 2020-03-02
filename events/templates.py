@@ -9,7 +9,6 @@ help_msg = """*Welcome to Moniterzer help page* :robot_face:
 >> ping - check health
 >> status - returns application status
 >> freq - set/get scan frequency (in hours)
->> reload - reload the watch list
 """
 
 update_msg = """[:small_red_triangle:] Updates are required

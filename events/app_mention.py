@@ -70,6 +70,7 @@ def _add(args):
     return "Added {} target(s) to watching list".format(len(alive_targets))
 
 def _remove(args):
+    print(args)
     global watchlist
     for target in args:
         if target in watchlist:
@@ -91,6 +92,7 @@ def _ping(args):
     return "pong"
 
 def _freq(args):
+    print(args)
     if len(args) == 0:
         return "Scanning frequency is one scan every {} hour(s)".format(flags.sleep_time)
 
@@ -149,25 +151,32 @@ def mention_handler(data):
     if message == []:
         return "event->app_mention::empty_message"
 
+ 
     parent_command = message[0]
-    if len(parent_command.split(" ")) == 0:
+    if len(message) == 1 and not " " in parent_command:
+        parent_command = message[0]
+        command_arguments = []
+    
+    elif " " in parent_command:
+        parent_command = parent_command.split(" ")
         if len(parent_command) > 1:
-            command_arguments = message[1::]
+            command_arguments = parent_command[1::]
         else:
             command_arguments = []
+        parent_command = parent_command[0]
     else:
-        commands          = parent_command.split(" ")
-        parent_command    = commands[0]
-        command_arguments = commands[1::]
+        parent_command    = message[0]
+        command_arguments = message[1::]
 
     if parent_command in registered_commands.keys():
         
         response = registered_commands[parent_command]
         if type(response) == types.FunctionType:
-            response = response(command_arguments)
+            response = response( [i.strip() for i in command_arguments if i.strip()] )
     else:
         response = registered_commands['default']
         
+    print(response)
     monitorizer.slackmsg(response, channel_id)
     
     return "event->app_mention::ok"
