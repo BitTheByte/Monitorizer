@@ -78,23 +78,6 @@ Monitorizer supports slack commands by mentioning the bot
   
 To Enable Slack commands you have to enable [Event Subscriptions](https://api.slack.com/events-api) and set the [Request URL] to http://youip:6969/slack
 
-# ChangeLog
-```
-1.0: untracked
-1.1: untracked
-1.2: 
-  - Added: New events system  
-  - Added: Support for masscan
-  - Improved: Slack reporting system
-1.3:
-  - Added: Stack commands
-  - Added: toolkit tracking
-  - Added: codebase tracking
-1.4:
-  - Added: New commands
-  - Improved: Message spacings 
-  - Fixed: Update Message
-```
 
 # TODO
 - Windows support
