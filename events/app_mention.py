@@ -70,7 +70,6 @@ def _add(args):
     return "Added {} target(s) to watching list".format(len(alive_targets))
 
 def _remove(args):
-    print(args)
     global watchlist
     for target in args:
         if target in watchlist:
@@ -92,7 +91,6 @@ def _ping(args):
     return "pong"
 
 def _freq(args):
-    print(args)
     if len(args) == 0:
         return "Scanning frequency is one scan every {} hour(s)".format(flags.sleep_time)
 
@@ -176,7 +174,6 @@ def mention_handler(data):
     else:
         response = registered_commands['default']
         
-    print(response)
     monitorizer.slackmsg(response, channel_id)
     
     return "event->app_mention::ok"
