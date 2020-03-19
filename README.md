@@ -60,6 +60,14 @@ scanners = [
 ```
 command lines can be found at `config/default.json`
 
+It is also recommended to add your API keys in the /config/amass.ini file such as :
+```
+...
+[SecurityTrails]
+apikey = XXXXX
+...
+```
+
 # How to run
 
 As the script runs once everyday to need to host it on a running linux server
