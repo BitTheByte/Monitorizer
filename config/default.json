@@ -40,10 +40,11 @@
 		}
 	},
 	"amass":{
-		"cmd": "./ext/amass/amass enum -d {target} -o {output} -src -brute -w {wordlist} -aw {alts_wordlist}",
+		"cmd": "./ext/amass/amass enum -active -brute -min-for-recursive 1 -d {target} -config {amass_config} -o {output} -w {alts_wordlist}",
 		"formats":{
 			"wordlist":"wordlists/namelist.txt",
-			"alts_wordlist":"wordlists/alterations.txt"
+			"alts_wordlist":"wordlists/alterations.txt",
+			"amass_config":"config/amass.ini"
 		}
 	},
 	"aiodnsbrute":{
