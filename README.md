@@ -11,12 +11,12 @@ Subdomain monitoring framework inspired by [subalert](https://github.com/yassine
 
 # Setting up the environment
 You need:
-- Python  2.7.16
+- Python  >= 3.6 ( python 2 is not supported )
 - Linux server e.g(Amanzon EC2) [64bit]
 
 Before we start you need to install the requirements
 ```
-$ sudo pip install -r requirements.txt
+$ sudo pip3 install -r requirements.txt
 ```
 After installing the requirements now you're ready to go
 
@@ -48,7 +48,7 @@ Monitorizer supports more than one subdomain enumeration tool to achieve the bes
 ```python
 
 scanners = [
-	aiodnsbrute, # https://github.com/blark/aiodnsbrute (need to be installed)
+	aiodnsbrute, # https://github.com/blark/aiodnsbrute (included)
 	subfinder,   # https://github.com/subfinder/subfinder (included)
 	sublist3r,   # https://github.com/aboul3la/Sublist3r (included)
 	dnsrecon,    # https://github.com/darkoperator/dnsrecon (included)
@@ -76,7 +76,7 @@ $ ssh myserver@somewhere.host
 $ ls
 Monitorizer
 $ cd Monitorizer
-$ screen -dmS monitorizer bash -c 'python monitor.py -w targets.txt'
+$ screen -dmS monitorizer bash -c 'python3 monitor.py -w targets.txt'
 ```
 
 # Slack Commands
@@ -84,10 +84,9 @@ Monitorizer supports slack commands by mentioning the bot
   
 ![](https://i.ibb.co/NFL2N7r/image.png)  
   
-To Enable Slack commands you have to enable [Event Subscriptions](https://api.slack.com/events-api) and set the [Request URL] to http://youip:6969/slack
+To Enable Slack commands you have to enable [Event Subscriptions](https://api.slack.com/events-api) and set the [Request URL] to http://youip:6500/slack
 
 
 # TODO
 - Windows support
-- Multithreading support
 - Adding more scanners

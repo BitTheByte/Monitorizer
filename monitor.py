@@ -1,13 +1,11 @@
-import monitorizer.flags as flags
+from core.monitorizer import Monitorizer
+from core.arguments import args
 from datetime import timedelta
 from datetime import datetime
-from events import on
+from events.on import Events
+from core import flags
 from time import sleep
-import monitorizer
-
-
-monitorizer.banner()
-monitorizer.first_run()
+import os
 
 
 scanners = [
@@ -15,57 +13,66 @@ scanners = [
 	"sublist3r",
 	"dnsrecon",
 	"dnscan",
-	"amass",
-	#"aiodnsbrute" - need to be preinstalled :: python3 -m pip install aiodnsbrute
+	"aiodnsbrute",
+	#"amass",
 	#"subbrute" - not recommended
 ]
 
+monitorizer = Monitorizer()
+if args.debug == False:
+	monitorizer.clear()
+events = Events()
 
-if monitorizer.os.path.isfile(monitorizer.args.watch):
-	_watch_list = 'set([t.strip() for t in open(monitorizer.args.watch,"r").readlines()])'
-	monitorizer.log("Reading targets from file: %s" % monitorizer.args.watch)
+if os.path.isfile(args.watch):
+	_watch_list = 'set([t.strip() for t in open(args.watch,"r").readlines()])'
+	monitorizer.log("Reading targets from file: %s" % args.watch)
+
 else:
-	# TODO: Add some error here
-	pass
+	monitorizer.banner()
+	monitorizer.error("Couldn't read watch list")
+	monitorizer.exit()
 
+monitorizer.set_config(args.config)
+events.set_config(args.config)
+monitorizer.initialize()
+monitorizer.self_check(scanners)
+monitorizer.banner()
+events.start()
 
-if monitorizer.args.scanners != "all":
-	scanners = set([t.strip() for t in monitorizer.args.scanners.split(",")])
-	monitorizer.log("Using scanners: %s" % ','.join(scanners))
-else:
-	monitorizer.log("Using all scanners: %s" % ','.join(scanners))
-
-
-on.start()
 
 while 1:
-	try:
-		watch_list = eval(_watch_list)
-		for target in watch_list:
-			if not target: continue
+	for target in eval(_watch_list):
+		flags.status = "running"
+		flags.current_target = target
 
-			report_name = str(datetime.now().strftime("%Y%m%d_%s"))
-			flags.report_name = report_name
-			report_path = "reports/%s_%s" % (target,report_name)
+		if not target: continue
 
-			monitorizer.log("<{}> ::: {}".format(target,report_path))
-			flags.status = "running"
-			newscan = monitorizer.mutliscan(scanners, target, output=report_path)
-			oldscan = monitorizer.read_reports(target,exclude=[report_name])
+		report_name  = str(datetime.now().strftime("%Y%m%d_%s"))
+		flags.report_name = report_name
+		monitorizer.log("Created new report target=%s name=%s" %(target,report_name))
 
-			if not len(oldscan):
-				monitorizer.log("<{}> no previous records".format(target))
-				diff = []
-			else:
-				targets = newscan - oldscan
-				if targets: on.discover(targets,report_name)
-				
-		monitorizer.clean_temp()
-		flags.status = "not running"
-		monitorizer.log("next scan after {} hour(s)".format( flags.sleep_time ))
-		sleep( 60*60*flags.sleep_time )
+		current_scan = monitorizer.mutliscan(scanners,target)
+		monitorizer.generate_report(target,current_scan,report_name)
 
-	except Exception as e:
-		monitorizer.log("FATEL ERROR: %s" % str(e))
-		monitorizer.slackmsg("FATEL ERROR: %s" % str(e))
+		new_domains  = monitorizer.merge_scans(current_scan)
+		old_domains  = monitorizer.merge_reports(target,exclude=[report_name])
 
+		if len(old_domains) > 0:
+			new_domains = new_domains - old_domains
+		else:
+			new_domains = []
+
+		for domain in new_domains:
+			foundby = []
+			for tool,subs in current_scan.items():
+				if not domain in subs:
+					continue
+				foundby.append(tool)
+			events.discover(domain,foundby,report_name)
+
+		if args.debug == False:
+			monitorizer.clean_temp()
+
+	flags.status = "idle"
+	monitorizer.log("Sleeping %i hour(s)" % (flags.sleep_time))
+	sleep( 60*60*flags.sleep_time)

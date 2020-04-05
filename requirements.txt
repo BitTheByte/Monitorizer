@@ -7,3 +7,8 @@ slackclient
 requests
 colorama
 flask
+click
+asyncio
+uvloop
+tqdm
+aiodns

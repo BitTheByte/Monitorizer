@@ -4,13 +4,13 @@
 		"slack_token":""
 	},
 	"subfinder":{
-		"cmd":"./ext/subfinder/subfinder -d {target} -o {output} -silent -v -t {threads}",
+		"cmd":"./thirdparty/subfinder/subfinder -d {target} -o {output} -v -t {threads}",
 		"formats":{
 			"threads":100
 		}
 	},
 	"dnsrecon":{
-		"cmd":"python ext/dnsrecon/dnsrecon.py -d {target} -D {wordlist} -t brt --threads {threads} -c {output} ",
+		"cmd":"python3 thirdparty/dnsrecon/dnsrecon.py -d {target} -D {wordlist} -t brt --threads {threads} -c {output} ",
 		
 		"formats":{
 			"threads":100,
@@ -19,35 +19,35 @@
 		
 	},
 	"dnscan":{
-		"cmd":"python ext/dnscan/dnscan.py -d {target} -w {wordlist} -o {output} -R 8.8.8.8",
+		"cmd":"python3 thirdparty/dnscan/dnscan.py -d {target} -w {wordlist} -o {output} -R 8.8.8.8",
 		"formats":{
 			"threads":100,
 			"wordlist":"wordlists/subdomains-1000.txt"
 		}
 	},
 	"sublist3r":{
-		"cmd":"python ext/sublist3r/sublist3r.py -d {target} -o {output} -t {threads} -v",
+		"cmd":"python3 thirdparty/sublist3r/sublist3r.py -d {target} -o {output} -t {threads} -v",
 		"formats":{
 			"threads":100
 		}
 		
 	},
 	"subbrute":{
-		"cmd":"python ext/subbrute/subbrute.py {target} -o {output} -r {resolvers} -s {wordlist}",
+		"cmd":"python thirdparty/subbrute/subbrute.py {target} -o {output} -r {resolvers} -s {wordlist}",
 		"formats":{
 			"resolvers":"wordlists/resolvers.txt",
 			"wordlist": "wordlists/names.txt"
 		}
 	},
 	"amass":{
-		"cmd": "./ext/amass/amass enum -d {target} -o {output} -src -brute -w {wordlist} -aw {alts_wordlist}",
+		"cmd": "./thirdparty/amass/amass enum -d {target} -o {output} -src -brute -w {wordlist} -aw {alts_wordlist}",
 		"formats":{
 			"wordlist":"wordlists/namelist.txt",
 			"alts_wordlist":"wordlists/alterations.txt"
 		}
 	},
 	"aiodnsbrute":{
-		"cmd": "aiodnsbrute {target} -f {output} -o csv -t {threads}",
+		"cmd": "cd thirdparty && python3 -m aiodnsbrute.cli {target} -f ../{output} -o csv -t {threads}",
 		"formats":{
 			"threads": 512
 		}
