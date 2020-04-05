@@ -2,7 +2,7 @@ import requests
 
 metadata = {
     "version":{
-        "monitorizer":"1.6",
+        "monitorizer":"2.0",
         "toolkit":"1.2"
     }
 }

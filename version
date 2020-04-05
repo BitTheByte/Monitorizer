@@ -1,10 +1,10 @@
 {
     "version":{
-        "monitorizer":"1.6",
+        "monitorizer":"2.0",
         "toolkit":"1.2"
     },
     "changelog":{
-        "monitorizer":"1.6v More stable and clean than ever\n - Complete codebase rewrite\n - New multitasking support\n - Python 3 support and deprecation of python 2 (see README.md)",
+        "monitorizer":"2.0v More stable and clean than ever\n - Complete codebase rewrite\n - New multitasking support\n - Python 3 support and deprecation of python 2 (see README.md)",
         "toolkit":"1.2v is a maintenance update for better stability"
     }
 }
