@@ -57,7 +57,7 @@
 		"cmd": "cd thirdparty && python3 -m aiodnsbrute.cli {target} -w ../{wordlist} -f ../{output} -o csv -t {threads}",
 		"formats":{
 			"threads": 1024,
-			"wordlist": "wordlists/mix.txt"
+			"wordlist": "wordlists/all.txt"
 		}
 	}
 }
