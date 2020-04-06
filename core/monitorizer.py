@@ -35,6 +35,7 @@ class Monitorizer(ScanParser,Console):
     def initialize(self):
         if not self.iscompatible():
             self.error("Your OS is not compatible with this tool. running it as root may fix the problem ")
+            self.exit()
 
         if os.path.isfile('.init'):
             self.log(".init file is found.. skipping initialization process")
@@ -48,13 +49,10 @@ class Monitorizer(ScanParser,Console):
         open('.init','w').write('true')
 
     def exit_code(self,cmd):
-        print(cmd)
         try:
-            subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True, timeout=3,universal_newlines=True)
+            subprocess.check_output(cmd, stdout=open(os.devnull,'a+'),stderr=subprocess.STDOUT,shell=True)
             return 0
         except subprocess.CalledProcessError as exc:
-            print(exc)
-            print(exc.returncode)
             return exc.returncode
 
     def self_check(self,scanners):
@@ -184,3 +182,8 @@ class Monitorizer(ScanParser,Console):
         temp = self.memsave[target]
         del self.memsave[target]
         return temp
+
+def signal_handler(sig, frame):
+    os._exit(1)
+
+signal.signal(signal.SIGINT, signal_handler)
