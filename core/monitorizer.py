@@ -50,7 +50,7 @@ class Monitorizer(ScanParser,Console):
 
     def exit_code(self,cmd):
         try:
-            subprocess.check_output(cmd, stdout=open(os.devnull,'a+'),stderr=subprocess.STDOUT,shell=True)
+            subprocess.check_output(cmd,stderr=open(os.devnull,'a+'),shell=True)
             return 0
         except subprocess.CalledProcessError as exc:
             return exc.returncode
