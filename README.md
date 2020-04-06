@@ -88,5 +88,4 @@ To Enable Slack commands you have to enable [Event Subscriptions](https://api.sl
 
 
 # TODO
-- Windows support
-- Adding more scanners
+Full todo list is at https://github.com/BitTheByte/Monitorizer/projects/1
