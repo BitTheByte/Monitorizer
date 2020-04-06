@@ -4,7 +4,7 @@
         "toolkit":"1.2"
     },
     "changelog":{
-        "monitorizer":"2.0v More stable and clean than ever\n - Complete codebase rewrite\n - New multitasking support\n - Python 3 support and deprecation of python 2 (see README.md)",
-        "toolkit":"1.2v is a maintenance update for better stability"
+        "monitorizer":"Monitorizer 2.0v is more stable and clean than ever\n - Complete codebase rewrite\n - New multitasking support\n - Amass is disabled by default due to performance issues\n - More tools are enabled by default\n - Python 3 support and deprecation of python 2 (see README.md)",
+        "toolkit":"Toolkit 1.2v is a maintenance update for better stability and performance"
     }
 }
