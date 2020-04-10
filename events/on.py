@@ -14,10 +14,9 @@ class Events(Report,Console,DNS):
 		msg += "[Github]: https://github.com/BitTheByte/Monitorizer\n\n"
 		msg +=  "```\n"
 		if not self.nxdomain(domain):
-			template = "{domain} is found by {foundby} O-Ports:{ports}".format(domain=domain,foundby=foundby,ports=ports)
-			
-			self.done("Discoverd new subdomain ::  %s" % template)
 			ports = masscan(domain)
+			template = "{domain} is found by {foundby} O-Ports:{ports}".format(domain=domain,foundby=foundby,ports=ports)
+			self.done("Discoverd new subdomain ::  %s" % template)
 			msg += template
 		msg += "```"
 		self.slack(msg=msg)
