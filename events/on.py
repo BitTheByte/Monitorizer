@@ -15,7 +15,7 @@ class Events(Report,Console,DNS):
 		msg +=  "```\n"
 		if not self.nxdomain(domain):
 			ports = masscan(domain)
-			template = "{domain} is found by {foundby} O-Ports:{ports}".format(domain=domain,foundby=foundby,ports=ports)
+			template = "{domain}  By: {foundby} Ports: {ports}".format(domain=domain,foundby=', '.join(foundby),ports=ports)
 			self.done("Discoverd new subdomain ::  %s" % template)
 			msg += template
 		msg += "```"
