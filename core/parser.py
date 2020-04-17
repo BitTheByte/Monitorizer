@@ -15,7 +15,7 @@ class ScanParser(object):
         domains = []
         for line in data:
             domains.append( line.split()[-1].strip() )
-        return domains
+        return self.check(domains)
 
     def subfinder(self,data):
         domains = []
@@ -61,20 +61,22 @@ class ScanParser(object):
             return []
 
         data = open(scan_file,'r').readlines()
+        
+        target, tool = os.path.basename(scan_file).split("_")
 
-        if 'amass' in scan_file:
+        if 'amass' in tool:
             return {'amass': self.amass(data)}
 
-        elif 'dnscan' in scan_file:
+        elif 'dnscan' in tool:
             return {'dnscan': self.dnscan(data)}
 
-        elif 'subfinder' in scan_file:
+        elif 'subfinder' in tool:
             return {'subfinder': self.subfinder(data)}
 
-        elif 'dnsrecon' in scan_file:
+        elif 'dnsrecon' in tool:
             return {'dnsrecon': self.dnsrecon(data)}
 
-        elif 'aiodnsbrute' in scan_file:
+        elif 'aiodnsbrute' in tool:
             return {'aiodnsbrute': self.aiodnsbrute(data)}
 
-        return {'default': self.default(data)}
+        return {tool.strip(): self.default(data)}
