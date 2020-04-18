@@ -28,8 +28,8 @@ def command_ping(args):
 
 
 def command_help(args):
-    code_base_update = True if metadata["version"]["monitorizer"] < metadata_github["version"]["monitorizer"] else False
-    toolkit_update   = True if metadata["version"]["toolkit"] < metadata_github["version"]["toolkit"] else False
+    code_base_update = True if float(metadata["version"]["monitorizer"]) < float(metadata_github["version"]["monitorizer"]) else False
+    toolkit_update   = True if float(metadata["version"]["toolkit"]) < float(metadata_github["version"]["toolkit"]) else False
 
     if code_base_update == True and toolkit_update == False:
         return templates.help_msg.replace("{warning1}\n","").format(
