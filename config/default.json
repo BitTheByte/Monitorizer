@@ -45,7 +45,7 @@
 	},
 	"amass":{
 		"health": "./thirdparty/amass/amass --version",
-		"cmd": "./thirdparty/amass/amass enum -active -brute -d {target} -config {amass_config} -o {output} -w {alts_wordlist}",
+		"cmd": "./thirdparty/amass/amass enum -passive -d {target} -config {amass_config} -o {output} -w {alts_wordlist}",
 		"formats":{
 			"wordlist":"wordlists/namelist.txt",
 			"alts_wordlist":"wordlists/alterations.txt",

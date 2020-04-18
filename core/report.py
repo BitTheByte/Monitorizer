@@ -23,9 +23,9 @@ class Report(Console):
 
         try:
             if not self.slack_token or  not self.slack_channel:
-                raise RuntimeError("Slack API are not set")
+                raise RuntimeError("Couldn't communicate with slack api server(s). please check bot token or channel id")
 
             response = client.chat_postMessage(channel=self.slack_channel,text=msg)
         except Exception as e:
-            print(e)
+            self.error(str(e))
             self.local(msg)

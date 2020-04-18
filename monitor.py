@@ -14,7 +14,7 @@ scanners = [
 	"dnsrecon",
 	"dnscan",
 	"aiodnsbrute",
-	#"amass",
+	"amass",
 	#"subbrute" - not recommended
 ]
 
@@ -45,7 +45,7 @@ while 1:
 		flags.status = "running"
 		flags.current_target = target
 
-		if not target: continue
+		if not target.strip(): continue
 
 		report_name  = str(datetime.now().strftime("%Y%m%d_%s"))
 		flags.report_name = report_name
@@ -62,17 +62,23 @@ while 1:
 		else:
 			new_domains = []
 
+		new_domains_filtered = {}
 		for domain in new_domains:
+			if not domain.strip():
+				continue
 			foundby = []
 			for tool,subs in current_scan.items():
 				if not domain in subs:
 					continue
 				foundby.append(tool)
-			events.discover(domain,foundby,report_name)
+			new_domains_filtered.update({domain:foundby})
+
+		if new_domains_filtered != {}:
+			events.discover(new_domains_filtered,report_name)
 
 		if args.debug == False:
 			monitorizer.clean_temp()
 
 	flags.status = "idle"
-	monitorizer.log("Sleeping %i hour(s)" % (flags.sleep_time))
+	monitorizer.done("Scanning finished. sleeping for %i hour(s)" % (flags.sleep_time))
 	sleep( 60*60*flags.sleep_time)

@@ -1,10 +1,10 @@
 {
     "version":{
-        "monitorizer":"2.0",
+        "monitorizer":"2.1",
         "toolkit":"1.2"
     },
     "changelog":{
-        "monitorizer":"Monitorizer 2.0v is more stable and clean than ever\n - Complete codebase rewrite\n - New multitasking support\n - Amass is disabled by default due to performance issues\n - More tools are enabled by default\n - Python 3 support and deprecation of python 2 (see README.md)",
-        "toolkit":"Toolkit 1.2v is a maintenance update for better stability and performance"
+        "monitorizer":"[2.1v] Monitorizer: better slack reporting and more tools is enabled by default including minor fixes and enhancements",
+        "toolkit":"[1.2v] Toolkit: a maintenance update for better stability and performance"
     }
 }
