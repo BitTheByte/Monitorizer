@@ -5,5 +5,5 @@ class DNS(object):
         try:
             dns.resolver.query(host)
             return 0
-        except dns.resolver.NXDOMAIN as e:
+        except:
             return 1
