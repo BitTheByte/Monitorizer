@@ -8,7 +8,7 @@ import subprocess
 import platform
 import signal
 import requests
-import json
+import yaml
 import stat
 import sys
 import os
@@ -69,7 +69,7 @@ class Monitorizer(ScanParser,Console):
     def set_config(self,config_file):
         self.log("Monitoizer::config=%s" % config_file)
         try:
-            self.config = json.loads(open(config_file,'r').read())
+            self.config = yaml.safe_load(open(config_file))
         except Exception as e:
             self.error(e)
         

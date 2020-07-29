@@ -10,7 +10,6 @@ import threading
 import requests
 import logging
 import types
-import json
 import sys
 import os
 import re
@@ -21,7 +20,9 @@ app       = Flask("Slack Events Server")
 seen      = []
 report    = Report()
 watchlist = reload_watchlist()
-report.set_config(argsc.config)
+
+def initialize():
+    report.set_config(argsc.config)
 
 def command_ping(args):
     return "pong"
@@ -33,24 +34,24 @@ def command_help(args):
 
     if code_base_update == True and toolkit_update == False:
         return templates.help_msg.replace("{warning1}\n","").format(
-                warning0=templates.update_msg.format(
+                warning0=templates.update_msg_codebase.format(
                         metadata_github['changelog']['monitorizer']
                 )
             )
 
     if toolkit_update == True and code_base_update == False:
         return templates.help_msg.replace("{warning1}\n","").format(
-            warning0=templates.update_msg.format(
+            warning0=templates.update_msg_toolkit.format(
                     metadata_github['changelog']['toolkit']
                 )
             )
 
     if toolkit_update == True and code_base_update == True:
         return templates.help_msg.format(
-                warning0=templates.update_msg.format(
+                warning0=templates.update_msg_codebase.format(
                         metadata_github['changelog']['monitorizer']
                 ),
-                warning1=templates.update_msg.format(
+                warning1=templates.update_msg_toolkit.format(
                     metadata_github['changelog']['toolkit']
                 )
             )

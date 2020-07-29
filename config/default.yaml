@@ -1,0 +1,45 @@
+settings:
+  slack_channel: XXXXXXXXXXX
+  slack_token: xoxb-XXXXXXXXXXX-XXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXX
+
+subfinder:
+  cmd: ./thirdparty/subfinder/subfinder -d {target} -t {threads} -config {config} -o {output} -v 
+  health: ./thirdparty/subfinder/subfinder --version
+  formats:
+    config: config/thirdparty/subfinder.yaml
+    threads: 300
+
+dnsrecon:
+  cmd: python3 thirdparty/dnsrecon/dnsrecon.py -d {target} -D {wordlist} -t brt --threads {threads} -c {output}
+  health: python3 thirdparty/dnsrecon/dnsrecon.py -h
+  formats:
+    threads: 300
+    wordlist: wordlists/all.txt
+
+dnscan:
+  cmd: python3 thirdparty/dnscan/dnscan.py -d {target} -w {wordlist} -o {output} -R 8.8.8.8
+  health: python3 thirdparty/dnscan/dnscan.py -h
+  formats:
+    threads: 300
+    wordlist: wordlists/subdomains-top1mil.txt
+
+sublist3r:
+  cmd: python3 thirdparty/sublist3r/sublist3r.py -d {target} -t {threads} -o {output} -v
+  health: python3 thirdparty/sublist3r/sublist3r.py -h
+  formats:
+    threads: 300
+
+amass:
+  cmd: ./thirdparty/amass/amass enum -passive -d {target} -config {config} -o {output} -w {alterations}
+  health: ./thirdparty/amass/amass --version
+  formats:
+    config: config/thirdparty/amass.ini
+    wordlist: wordlists/subdomains-top1mil.txt
+    alterations: wordlists/alterations.txt
+
+aiodnsbrute:
+  cmd: cd thirdparty && python3 -m aiodnsbrute.cli {target} -w ../{wordlist} -f ../{output} -o csv -t {threads}
+  health: cd thirdparty && python3 -m aiodnsbrute.cli --help
+  formats:
+    threads: 1024
+    wordlist: wordlists/mix.txt

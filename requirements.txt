@@ -12,3 +12,4 @@ asyncio
 uvloop
 tqdm
 aiodns
+pyyaml

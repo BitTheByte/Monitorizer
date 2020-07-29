@@ -5,14 +5,12 @@ import os
 def reload_watchlist():
     if not os.path.isfile(argsc.watch):
         return []
-    return [t.strip() for t in open(argsc.watch,"r").readlines()]
+    return [t.strip() for t in open(argsc.watch,"r").readlines() if t.strip()]
 
 def rewrite_watchlist(watchlist):
     if not os.path.isfile(argsc.watch):
         return []
     open(argsc.watch , 'w').write('\n'.join(watchlist))
-
-
 
 def is_alive(url):
     try:

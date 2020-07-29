@@ -41,13 +41,7 @@ def _worker(wid,target,channel,lock,callback=None):
     while( channel.open() ):
             ok, args = channel.pop()
             if not ok: time.sleep(0.50); continue
-
-            #try:
             retval = target(*args)
-            #except Exception  as e :
-            #    print(str(e))
-            #    retval = None
-            
             with lock: channel.jobs -= 1
 
             if type(callback) != types.FunctionType and type(callback) != types.MethodType: continue

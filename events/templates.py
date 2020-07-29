@@ -12,7 +12,12 @@ help_msg = """*Welcome to Moniterzer help page* :robot_face:
 >> freq - set/get scan frequency (in hours)
 """
 
-update_msg = """[:small_red_triangle:] Updates are required
+update_msg_toolkit = """[:small_red_triangle:] New version of the toolkit is released (this is optional)
+```
+{}
+```
+"""
+update_msg_codebase = """[:small_red_triangle:] New version of Moniterizer is released (updates are required to maintain stability)
 ```
 {}
 ```

@@ -1,6 +1,6 @@
 from .cli import Console
 import slack
-import json
+import yaml
 
 class Report(Console):
     def __init__(self):
@@ -13,18 +13,16 @@ class Report(Console):
 
     def set_config(self,config_file):
         self.log("Report::config=%s" % config_file)
-        self.config        = json.loads(open(config_file,'r').read())
+        self.config        = yaml.safe_load(open(config_file))
         self.slack_channel = self.config['settings']['slack_channel']
         self.slack_token   = self.config['settings']['slack_token']
 
 
     def slack(self,msg,channel_id=''):
         client = slack.WebClient(self.slack_token)
-
         try:
             if not self.slack_token or  not self.slack_channel:
                 raise RuntimeError("Couldn't communicate with slack api server(s). please check bot token or channel id")
-
             response = client.chat_postMessage(channel=self.slack_channel,text=msg)
         except Exception as e:
             self.error(str(e))

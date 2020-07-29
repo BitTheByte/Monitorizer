@@ -1,0 +1,43 @@
+resolvers:
+  - 1.1.1.1
+  - 1.0.0.1
+  - 8.8.8.8
+  - 8.8.4.4
+  
+sources:
+  - alienvault
+  - archiveis
+  - binaryedge
+  - bufferover
+  - censys
+  - certspotter
+  - certspotterold
+  - commoncrawl
+  - crtsh
+  - dnsdumpster
+  - dnsdb
+  - entrust
+  - github
+  - hackertarget
+  - ipv4info
+  - intelx
+  - passivetotal
+  - rapiddns
+  - securitytrails
+  - shodan
+  - sitedossier
+  - spyse
+  - sublist3r
+  - threatcrowd
+  - threatminer
+  - urlscan
+  - virustotal
+  - waybackarchive
+  - zoomeye
+binaryedge:
+censys:
+certspotter: []
+passivetotal: 
+securitytrails: []
+shodan:
+github:

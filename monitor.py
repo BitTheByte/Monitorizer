@@ -12,31 +12,33 @@ scanners = [
 	"subfinder",
 	"sublist3r",
 	"dnsrecon",
-	"dnscan",
 	"aiodnsbrute",
 	"amass",
-	#"subbrute" - not recommended
+	# "dnscan", # not as fast as the others
 ]
 
 monitorizer = Monitorizer()
+
 if args.debug == False:
 	monitorizer.clear()
+
+monitorizer.banner()
 events = Events()
 
 if os.path.isfile(args.watch):
 	_watch_list = 'set([t.strip() for t in open(args.watch,"r").readlines()])'
-	monitorizer.log("Reading targets from file: %s" % args.watch)
+	monitorizer.log("reading targets from file: %s" % args.watch)
 
 else:
-	monitorizer.banner()
-	monitorizer.error("Couldn't read watch list")
+	monitorizer.error("unable to read %s is the file on the disk?" % args.watch)
 	monitorizer.exit()
 
+
 monitorizer.set_config(args.config)
+events.initialize()
 events.set_config(args.config)
 monitorizer.initialize()
 monitorizer.self_check(scanners)
-monitorizer.banner()
 events.start()
 
 
@@ -49,7 +51,7 @@ while 1:
 
 		report_name  = str(datetime.now().strftime("%Y%m%d_%s"))
 		flags.report_name = report_name
-		monitorizer.log("Created new report target=%s name=%s" %(target,report_name))
+		monitorizer.log("created new report target=%s name=%s" %(target,report_name))
 
 		current_scan = monitorizer.mutliscan(scanners,target)
 		monitorizer.generate_report(target,current_scan,report_name)
@@ -80,5 +82,5 @@ while 1:
 			monitorizer.clean_temp()
 
 	flags.status = "idle"
-	monitorizer.done("Scanning finished. sleeping for %i hour(s)" % (flags.sleep_time))
+	monitorizer.done("scanning finished, sleeping for %i hour(s)" % (flags.sleep_time))
 	sleep( 60*60*flags.sleep_time)

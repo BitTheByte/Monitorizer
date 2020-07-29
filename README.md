@@ -24,15 +24,11 @@ After installing the requirements now you're ready to go
 
 This tool requires a slack workspace to report the findings  
 
-You need to edit the `config/default.json` 
-```json
-
-{
-	"settings":{
-		"slack_channel":"change this to your channel id",
-		"slack_token":"change this to your bot user Oauth token",
-	}
-}
+You need to edit the `config/default.yaml` 
+```yaml
+settings:
+  slack_channel: CM8XXXXXX
+  slack_token: xoxb-XXXXXXXXXX-ZZZZZZZZZZ-YYYYYYYYYYYYYY
 ```
 For more informations visit: https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens  
 
@@ -53,20 +49,12 @@ scanners = [
 	sublist3r,   # https://github.com/aboul3la/Sublist3r (included)
 	dnsrecon,    # https://github.com/darkoperator/dnsrecon (included)
 	dnscan,      # https://github.com/rbsec/dnscan (included)
-	subbrute,    # https://github.com/TheRook/subbrute (included)
 	amass,       # https://github.com/OWASP/Amass (included)
 ]
 
 ```
-command lines can be found at `config/default.json`
-
-It is also recommended to add your API keys in the /config/amass.ini file such as :
-```
-...
-[SecurityTrails]
-apikey = XXXXX
-...
-```
+command lines can be found at `config/default.yaml`
+It is also recommended to add your API keys in the `config/thirdparty/*`
 
 # How to run
 
@@ -84,7 +72,7 @@ Monitorizer supports slack commands by mentioning the bot
   
 ![](https://i.ibb.co/NFL2N7r/image.png)  
   
-To Enable Slack commands you have to enable [Event Subscriptions](https://api.slack.com/events-api) and set the [Request URL] to http://youip:6500/slack
+To Enable Slack commands you have to enable [Event Subscriptions](https://api.slack.com/events-api) and set the [Request URL] to http://your_ip:6500/slack
 
 
 # TODO

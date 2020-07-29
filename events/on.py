@@ -7,6 +7,9 @@ import events.app_mention as SlackApi
 
 
 class Events(Report,Console,DNS):
+	def initialize(self):
+		SlackApi.initialize()
+
 	def discover(self,new_domains,report_name):
 		new_domains_filtered = {}
 		for domain, foundby in new_domains.items():

@@ -37,9 +37,9 @@ banner_fmt = """
  {r}|.      |{w}  _  |     |  |   _|  _  |   _|  |-- __|  -__|   _|
  {r}|. \_/  |{w}_____|__|__|__|____|_____|__| |__|_____|_____|__|  
  {r}|:  |   | {b}The ultimate subdomain monitorization framework                                                 
- {r}|::.|:. |             {y}codebase: v{cversion}, toolkit: v{tversion}                 
- {r}`--- ---'                                                             
-                                                             
+ {r}|::.|:. |           {y}codebase: v{cversion}, toolkit: v{tversion}            
+ {r}`--- ---'   {b}https://github.com/BitTheByte/Monitorizer                                    
+                                              
 """.format(
 r = Fore.RED,
 w = Fore.WHITE,
