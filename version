@@ -1,10 +1,10 @@
 {
     "version":{
         "monitorizer":"2.3",
-        "toolkit":"1.3"
+        "toolkit":"1.4"
     },
     "changelog":{
         "monitorizer":"Monitorizer v2.3 is released. please update as backward compatibility will not be supported starting from the next release",
-        "toolkit":"Toolkit v1.3 is released. please update as backward compatibility will not be supported starting from the next release"
+        "toolkit":"Toolkit v1.4 is released. please update as backward compatibility will not be supported starting from the next release"
     }
 }
