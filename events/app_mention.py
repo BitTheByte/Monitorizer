@@ -15,7 +15,6 @@ import os
 import re
 
 
-
 app       = Flask("Slack Events Server")
 seen      = []
 report    = Report()
@@ -26,7 +25,6 @@ def initialize():
 
 def command_ping(args):
     return "pong"
-
 
 def command_help(args):
     code_base_update = True if float(metadata["version"]["monitorizer"]) < float(metadata_github["version"]["monitorizer"]) else False
@@ -58,7 +56,6 @@ def command_help(args):
 
     return templates.help_msg.replace("{warning0}\n","").replace("{warning1}\n","")
 
-
 def command_add(args):
     alive_targets = []
     for target in args:
@@ -71,7 +68,6 @@ def command_add(args):
     rewrite_watchlist(watchlist)
     return "Added {} target(s) to watching list".format(len(alive_targets))
 
-
 def command_remove(args):
     for target in args:
         if not target in watchlist:
@@ -81,7 +77,6 @@ def command_remove(args):
     rewrite_watchlist(watchlist)
     return "Removed {} target(s) from watching list".format(len(args))   
 
-
 def command_list(args):
     msg = ""
     targets = reload_watchlist()
@@ -90,7 +85,6 @@ def command_list(args):
     for target in targets:
         msg += templates.target.format(target) + "\n"
     return msg[:-1]
-
 
 def command_freq(args):
     if len(args) == 0:
@@ -124,7 +118,18 @@ def command_status(args):
     else:
         return templates.stop_status_msg
 
+def command_acunetix(args):
+    if len(args) == 0:
+        return "Acunetix integration is " + ("enabled" if flags.acunetix else "disabled")
 
+    if args[0] == 'enable':
+        flags.acunetix = True
+        return "Acunetix integration is enabled. new targets will be sent automatically"
+
+    if args[0] == 'disable':
+        flags.acunetix = False
+        return "Acunetix integration is disabled. no targets will be sent"
+        
 registered_commands = {
     "default": "unrecognized command use @bot help",
     'help':   command_help,
@@ -134,9 +139,9 @@ registered_commands = {
     'status': command_status,
     'ping':   command_ping,
     'freq':   command_freq,
+    'acunetix': command_acunetix,
     'concurrent': command_concurrent
 }
-
 
 def mention_handler(data):
     global seen

@@ -1,7 +1,6 @@
 *.pyc
 __pycache__/.*
-config/bitthebyte.json
-config/test.json
+config/bitthebyte.yaml
 reports/*
 temp/*
 test/*

@@ -22,13 +22,16 @@ After installing the requirements now you're ready to go
 
 # Configuration
 
-This tool requires a slack workspace to report the findings  
+This tool requires a slack workspace to report the findings. Additionally you can use the included acunetix integration to scan the newly discoverd domains
 
 You need to edit the `config/default.yaml` 
 ```yaml
 settings:
   slack_channel: CM8XXXXXX
   slack_token: xoxb-XXXXXXXXXX-ZZZZZZZZZZ-YYYYYYYYYYYYYY
+  acunetix_token: 63c19a6da79816b21429e5bb262daed863c19a6da79816b21429e5bb262daed8
+  acunetix_host:  acunetix.exmaple.com
+  acunetix_port:  3443
 ```
 For more informations visit: https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens  
 

@@ -1,7 +1,7 @@
 version:
-  monitorizer: 2.2
+  monitorizer: 2.3
   toolkit: 1.3
 
 changelog:
-  monitorizer: PLACEHOLDER
+  monitorizer: Added new integration for acunetix 
   toolkit: PLACEHOLDER

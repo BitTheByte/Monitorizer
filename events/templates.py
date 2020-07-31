@@ -8,8 +8,9 @@ help_msg = """*Welcome to Moniterzer help page* :robot_face:
 >> remove - remove target(s) from monitoring list
 >> ping - check health
 >> status - returns application status
->> concurrent - set/get number of concurrent working tools  (recommended= 2)
->> freq - set/get scan frequency (in hours)
+>> concurrent - set/get number of concurrent working tools  (recommended=2)
+>> acunetix - enabled/disable sending new discoverd targets to acunetix (default=disabled)
+>> freq - set/get scan frequency in hours (default=24)
 """
 
 update_msg_toolkit = """[:small_red_triangle:] New version of the toolkit is released (this is optional)

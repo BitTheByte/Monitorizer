@@ -3,7 +3,7 @@ import yaml
 
 metadata = {
     "version":{
-        "monitorizer": 2.2,
+        "monitorizer": 2.3,
         "toolkit": 1.3
     }
 }

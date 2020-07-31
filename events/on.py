@@ -4,6 +4,7 @@ from core.report import Report
 from core.dns import DNS
 from core.cli import Console
 import events.app_mention as SlackApi
+from core import flags
 
 
 class Events(Report,Console,DNS):
@@ -24,12 +25,15 @@ class Events(Report,Console,DNS):
 		msg += "[Github]: https://github.com/BitTheByte/Monitorizer\n\n"
 		msg +=  "```\n"
 		for domain, foundby in new_domains.items():
+			if flags.acunetix:
+				self.acunetix(domain)
 			ports = masscan(domain)
 			template = "{domain}  by:{foundby} ports:{ports}".format(domain=domain,foundby=', '.join(foundby),ports=ports)
 			self.done("Discoverd new subdomain ::  %s" % template)
 			msg += template + "\n"
 		msg += "```"
 		self.slack(msg=msg)
+
 
 	def start(self):
 		SlackApi.run_server()
