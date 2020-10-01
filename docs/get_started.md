@@ -40,15 +40,14 @@ To enable app mentions you need to go to `Event subscribtion` tab and set `Reque
 
 And set your `bot events` as follows
 
-<p align="center" width="100%">
-    <img src=/docs/assets/slack_app_mention.PNG alt="Slack App Mention Subscribe" width=500px>
-</p>
+
+<img src=/docs/assets/slack_app_mention.PNG alt="Slack App Mention Subscribe" width=500px>
+
 
 ```
 app_mention
 ```
 
-Now you're ready to go verify by mentioning the app 
-<p align="center" width="100%">
-    <img src=/docs/assets/slack_chat_app.PNG width=500px>
-</p>
+Now you're ready to go verify by mentioning the app   
+
+<img src=/docs/assets/slack_chat_app.PNG width=500px>
