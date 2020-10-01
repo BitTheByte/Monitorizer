@@ -36,7 +36,7 @@ report:
       host:  acunetix.exmaple.com
       port:  3443
 ```
-For more informations visit: https://github.com/BitTheByte/Monitoizer/docs/get_started.md
+For more information see: [docs/get_started.md](/docs/get_started.md)
 
 
 
