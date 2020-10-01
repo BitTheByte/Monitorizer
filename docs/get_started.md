@@ -11,7 +11,10 @@ After creating the app you will be greeted with new window like this. click on `
 At the `OAuth & Permissions` tab scroll down util you see `Scopes` tab
 and set the your bot scopes as follows:
 
-![Slack Bot Scope](assets/slack_bot_scope.PNG)
+<p align="center" width="100%">
+    <img src=/docs/assets/slack_bot_scope.PNG alt="Slack Bot Scope" width=500px>
+</p>
+
 ```
 app_mentions:read
 chat:write
@@ -37,11 +40,15 @@ To enable app mentions you need to go to `Event subscribtion` tab and set `Reque
 
 And set your `bot events` as follows
 
-![Slack App Mention Subscribe](assets/slack_app_mention.PNG)
+<p align="center" width="100%">
+    <img src=/docs/assets/slack_app_mention.PNG alt="Slack App Mention Subscribe" width=500px>
+</p>
+
 ```
 app_mention
 ```
 
 Now you're ready to go verify by mentioning the app 
-
-![](assets/slack_chat_app.PNG)
+<p align="center" width="100%">
+    <img src=/docs/assets/slack_chat_app.PNG width=500px>
+</p>
