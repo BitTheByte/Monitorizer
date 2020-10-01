@@ -26,14 +26,17 @@ This tool requires a slack workspace to report the findings. Additionally you ca
 
 You need to edit the `config/default.yaml` 
 ```yaml
-settings:
-  slack_channel: CM8XXXXXX
-  slack_token: xoxb-XXXXXXXXXX-ZZZZZZZZZZ-YYYYYYYYYYYYYY
-  acunetix_token: 63c19a6da79816b21429e5bb262daed863c19a6da79816b21429e5bb262daed8
-  acunetix_host:  acunetix.exmaple.com
-  acunetix_port:  3443
+report:
+  slack: 
+    channel: CM8XXXXXX
+    token: xoxb-XXXXXXXXXX-ZZZZZZZZZZ-YYYYYYYYYYYYYY
+  
+  acunetix:
+      token: 63c19a6da79816b21429e5bb262daed863c19a6da79816b21429e5bb262daed8
+      host:  acunetix.exmaple.com
+      port:  3443
 ```
-For more informations visit: https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens  
+For more informations visit: https://github.com/BitTheByte/Monitoizer/docs/get_started.md
 
 
 

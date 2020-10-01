@@ -1,4 +1,4 @@
-from core.arguments import args as argsc
+from monitorizer.ui.arguments import args as argsc
 import requests
 import os
 

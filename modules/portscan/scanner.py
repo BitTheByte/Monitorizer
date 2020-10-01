@@ -13,7 +13,7 @@ def get_temp_path():
 
 def _masscan_scan_reader(path):
 	if not os.path.isfile(path):
-		return "[masscan]: can't find scan file"
+		return "can't find scan file"
 
 	scan_file = open(path,'r').read()
 	ports = [x.strip() for x in re.findall(r'portid="(.*?)"', scan_file) if x.strip()]
@@ -37,4 +37,4 @@ def masscan(target):
 		)
 		return _masscan_scan_reader(output)
 	except Exception as e:
-		return "[masscan]: error"
+		return "error"

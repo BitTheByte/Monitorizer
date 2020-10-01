@@ -1,9 +1,13 @@
-settings:
-  slack_channel:  xxxxxxxxxxx
-  slack_token:    xxxxxxxxxxx
-  acunetix_token: xxxxxxxxxxx
-  acunetix_host:  exmaple.com
-  acunetix_port:  3443
+report:
+  slack:
+    channel:
+    token:
+
+  acunetix:
+    host:
+    port:
+    token:
+
 
 subfinder:
   cmd: ./thirdparty/subfinder/subfinder -d {target} -t {threads} -config {config} -o {output} -v 

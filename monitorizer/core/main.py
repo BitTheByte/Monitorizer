@@ -1,22 +1,21 @@
-from .parser import ScanParser
-from .cli import Console
-from . import multitask
-import json
-import glob
-import subprocess
+from modules.parsers.scan import ScanParser
+from monitorizer.ui.cli import Console
+
+from monitorizer.ui.arguments import args
+from monitorizer.core import multitask
+from monitorizer.core import flags
+from modules.event.on import Events
+
 import subprocess
 import platform
 import signal
-import requests
-import yaml
 import stat
-import sys
+import yaml
+import glob
 import os
-from . import flags
-from .arguments import args
 
 
-class Monitorizer(ScanParser,Console):
+class Monitorizer(ScanParser, Console):
     def __init__(self):
 
         self.chmod_tools = [
@@ -24,13 +23,9 @@ class Monitorizer(ScanParser,Console):
             './thirdparty/subfinder/subfinder',
             './thirdparty/masscan/masscan'
         ]
-        self.create_dirs = [
-            'reports',
-            'temp'
-        ]
-
-        self.config  = None
-        self.memsave = {'running_tools':[]}
+        self.create_dirs = ['reports', 'output']
+        self.config = None
+        self.status = {'running_tools': []}
 
     def initialize(self):
         if not self.iscompatible():
@@ -39,23 +34,23 @@ class Monitorizer(ScanParser,Console):
 
         if os.path.isfile('.init'):
             self.log(".init file is found.. skipping initialization process")
-            return 
-    
+            return
+
         self.warning("Monitoizer is initializing please don't interrupt ..")
         self.init_dirs()
         self.set_permissions()
         self.install_tools()
 
-        open('.init','w').write('true')
+        open('.init', 'w').write('this file is created during first run. please don\'t delete it')
 
-    def exit_code(self,cmd):
+    def exit_code(self, cmd):
         try:
-            subprocess.check_output(cmd,stderr=open(os.devnull,'a+'),shell=True)
+            subprocess.check_output(cmd, stderr=open(os.devnull, 'a+'), shell=True)
             return 0
         except subprocess.CalledProcessError as exc:
             return exc.returncode
 
-    def self_check(self,scanners):
+    def self_check(self, scanners):
         for tool in scanners:
             health_cmd = self.config[tool]['health']
             if self.exit_code(health_cmd) != 0:
@@ -63,16 +58,16 @@ class Monitorizer(ScanParser,Console):
             else:
                 self.log("%s is alive" % tool)
 
-    def install_tools(self,path='thirdparty'):
+    def install_tools(self, path='thirdparty'):
         pass
 
-    def set_config(self,config_file):
-        self.log("Monitoizer::config=%s" % config_file)
+    def set_config(self, config_file):
+        self.log(f"Monitoizer::config={config_file}")
         try:
             self.config = yaml.safe_load(open(config_file))
         except Exception as e:
             self.error(e)
-        
+
     def iscompatible(self):
         if platform.architecture()[0].lower() != '64bit':
             self.log("64bit CPU was expected")
@@ -86,89 +81,88 @@ class Monitorizer(ScanParser,Console):
         for dir_name in self.create_dirs:
             if os.path.isdir(dir_name): continue
             os.mkdir(dir_name)
-            self.log("Created new directory :: %s" % dir_name)
+            self.log(f"Created new directory :: {dir_name}")
 
     def set_permissions(self):
         for tool in self.chmod_tools:
             st = os.stat(tool)
             os.chmod(tool, st.st_mode | stat.S_IEXEC)
-            self.log("Changed permissions of %s" % tool)
+            self.log(f"Changed permissions of {tool}")
 
-    def run_and_return_output(self,cmd,output,silent=0):
+    def run_and_return_output(self, cmd, output, silent=0):
         self.log("Running command :: " + cmd)
         try:
             if not args.debug:
-                subprocess.check_call(cmd,stdout=open(os.devnull,'a+'),stderr=subprocess.STDOUT,shell=True)
+                subprocess.check_call(cmd, stdout=open(os.devnull, 'a+'), stderr=subprocess.STDOUT, shell=True)
             else:
-                subprocess.check_call(cmd,shell=True)
-            return self.parse( output )
+                subprocess.check_call(cmd, shell=True)
+            return self.parse(output)
         except Exception as e:
             self.log("Error occurred during executing :: " + cmd + "\n" + str(e))
             return False
 
-    def merge_reports(self,target,exclude=[]):
+    def merge_reports(self, target, exclude=[]):
         result = []
-        for path in glob.glob("reports/{}_*".format(target)):
+        for path in glob.glob(f"reports/{target}_*"):
             for e in exclude:
-                if path == "reports/%s_%s" % (target,e):
+                if path == f"reports/{target}_{e}":
                     break
             else:
-                for subdomain in open(path,'r').read().split('\n'):
+                for subdomain in open(path, 'r').read().split('\n'):
                     result.append(subdomain)
         return set(result)
 
-    def merge_scans(self,scan):
+    def merge_scans(self, scan):
         domains = set()
-        for tool,subs in scan.items():
+        for tool, subs in scan.items():
             for sub in subs:
                 domains.add(sub)
         return domains
 
-    def generate_report(self,target,scan,suffix=''):
+    def generate_report(self, target, scan, suffix=''):
         domains = self.merge_scans(scan)
-        report = 'reports/%s_%s' % (target,suffix)
-        open(report,'w').write('\n'.join(domains))
+        report = f'reports/{target}_{suffix}'
+        open(report, 'w').write('\n'.join(domains))
         return report
 
     def clean_temp(self):
-        for i in glob.glob("temp/*"):
+        for i in glob.glob("output/*"):
             os.unlink(i)
-        self.log("temp/ directory is cleaned")
+        self.log("output/ directory is cleaned")
 
-    def scan_with(self,target,tool_name):
-        self.memsave['running_tools'].append(tool_name)
-        flags.running_tool = ', '.join(self.memsave['running_tools'])
+    def scan_with(self, target, tool_name):
+        self.status['running_tools'].append(tool_name)
+        flags.running_tool = ', '.join(self.status['running_tools'])
 
-        output = "temp/%s_%s" % (target,tool_name)
+        output = f"output/{target}_{tool_name}"
 
         if not tool_name in self.config.keys():
-            return False 
+            return False
 
         formats = self.config[tool_name]['formats']
-        formats.update({'target':target,'output':output})
+        formats.update({'target': target, 'output': output})
         cmd = self.config[tool_name]['cmd'].format(**formats)
 
-        output = self.run_and_return_output(cmd,output)
-        self.memsave['running_tools'].remove(tool_name)
-        self.done("%s finished scanning %s" % (tool_name,target))
+        output = self.run_and_return_output(cmd, output)
+        self.status['running_tools'].remove(tool_name)
+        self.info(f"{tool_name} finished scanning {target}")
         return output
 
-    def on_scan_finish(self,result):
+    def on_scan_finish(self, result):
         _return = result.ret
-        if _return == False:
+        if not _return:
             return
-        target,tool_name = result.args
+        target, tool_name = result.args
 
-        if not target in self.memsave.keys():
-            self.memsave[target] = {}
-        self.memsave[target].update(_return)
+        if not target in self.status.keys():
+            self.status[target] = {}
+        self.status[target].update(_return)
 
-    def mutliscan(self,scanners,target,concurrent=2):
-        subdomains = set()
-        channel    = multitask.Channel()
+    def mutliscan(self, scanners, target, concurrent=2):
+        channel = multitask.Channel()
 
         for tool in scanners:
-            channel.append(target,tool)
+            channel.append(target, tool)
 
         multitask.workers(
             target=self.scan_with,
@@ -179,11 +173,14 @@ class Monitorizer(ScanParser,Console):
         channel.wait()
         channel.close()
 
-        temp = self.memsave[target]
-        del self.memsave[target]
+        temp = self.status[target]
+        del self.status[target]
         return temp
 
+
 def signal_handler(sig, frame):
+    Events().exit()
     os._exit(1)
+
 
 signal.signal(signal.SIGINT, signal_handler)
