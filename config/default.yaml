@@ -1,12 +1,19 @@
+report:
+  slack:
+    channel:
+    token:
+
+  acunetix:
+    host:
+    port:
+    token:
+
 settings:
-  slack_channel:  xxxxxxxxxxx
-  slack_token:    xxxxxxxxxxx
-  acunetix_token: xxxxxxxxxxx
-  acunetix_host:  exmaple.com
-  acunetix_port:  3443
+  scan:
+    timeout: 0 # global timeout for ALL tools in SECONDS, 0 = unlimited
 
 subfinder:
-  cmd: ./thirdparty/subfinder/subfinder -d {target} -t {threads} -config {config} -o {output} -v 
+  cmd: ./thirdparty/subfinder/subfinder -d {target} -t {threads} -config {config} -o {output} -v
   health: ./thirdparty/subfinder/subfinder --version
   formats:
     config: config/thirdparty/subfinder.yaml

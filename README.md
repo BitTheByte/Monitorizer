@@ -26,14 +26,17 @@ This tool requires a slack workspace to report the findings. Additionally you ca
 
 You need to edit the `config/default.yaml` 
 ```yaml
-settings:
-  slack_channel: CM8XXXXXX
-  slack_token: xoxb-XXXXXXXXXX-ZZZZZZZZZZ-YYYYYYYYYYYYYY
-  acunetix_token: 63c19a6da79816b21429e5bb262daed863c19a6da79816b21429e5bb262daed8
-  acunetix_host:  acunetix.exmaple.com
-  acunetix_port:  3443
+report:
+  slack: 
+    channel: CM8XXXXXX
+    token: xoxb-XXXXXXXXXX-ZZZZZZZZZZ-YYYYYYYYYYYYYY
+  
+  acunetix:
+      token: 63c19a6da79816b21429e5bb262daed863c19a6da79816b21429e5bb262daed8
+      host:  acunetix.exmaple.com
+      port:  3443
 ```
-For more informations visit: https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens                                                
+For more information see: [docs/get_started.md](/docs/get_started.md)
 
 ```
 $ python monitor.py -w watch_targets.txt
@@ -87,6 +90,15 @@ To Enable Slack commands you have to enable [Event Subscriptions](https://api.sl
 | acunetix   	| Enabled/Disable sending new discoverd targets to acunetix 	| @monitoizer acunetix enable or @monitoizer acunetix disable                  	|
 | freq       	| Set/Get scan frequency (in hours)                         	| @monitoizer freq or @monitoizer freq {number}                                	|                   
 
+
+# FAQ
+1) Scanning may hang on some targets for a long time
+    - Try running the tool with `-d` flag to debug the problem
+    - Edit the `timeout` flag at `config/default.yaml` to your desired time in **seconds**
+
+2) Slack's bot app don't respond to my commands
+    - Check your slack bot token 
+    - Reconfigure the tool using the [docs](/docs/get_started.md)
 
 # TODO
 Full todo list is at https://github.com/BitTheByte/Monitorizer/projects/1

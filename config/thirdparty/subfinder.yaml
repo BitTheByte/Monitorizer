@@ -1,43 +1,99 @@
 resolvers:
-  - 1.1.1.1
-  - 1.0.0.1
-  - 8.8.8.8
-  - 8.8.4.4
-  
+    - 1.1.1.1
+    - 1.0.0.1
+    - 8.8.8.8
+    - 8.8.4.4
 sources:
-  - alienvault
-  - archiveis
-  - binaryedge
-  - bufferover
-  - censys
-  - certspotter
-  - certspotterold
-  - commoncrawl
-  - crtsh
-  - dnsdumpster
-  - dnsdb
-  - entrust
-  - github
-  - hackertarget
-  - ipv4info
-  - intelx
-  - passivetotal
-  - rapiddns
-  - securitytrails
-  - shodan
-  - sitedossier
-  - spyse
-  - sublist3r
-  - threatcrowd
-  - threatminer
-  - urlscan
-  - virustotal
-  - waybackarchive
-  - zoomeye
-binaryedge:
-censys:
+    - alienvault
+    - anubis
+    - bufferover
+    - cebaidu
+    - certspotter
+    - certspotterold
+    - censys
+    - chaos
+    - crtsh
+    - dnsdumpster
+    - hackertarget
+    - intelx
+    - ipv4info
+    - passivetotal
+    - robtex
+    - riddler
+    - securitytrails
+    - shodan
+    - spyse
+    - sublist3r
+    - threatcrowd
+    - threatminer
+    - virustotal
+all-sources:
+    - alienvault
+    - anubis
+    - archiveis
+    - binaryedge
+    - bufferover
+    - cebaidu
+    - censys
+    - certspotter
+    - certspotterold
+    - chaos
+    - commoncrawl
+    - crtsh
+    - dnsdumpster
+    - dnsdb
+    - github
+    - hackertarget
+    - ipv4info
+    - intelx
+    - passivetotal
+    - rapiddns
+    - riddler
+    - recon
+    - robtex
+    - securitytrails
+    - shodan
+    - sitedossier
+    - spyse
+    - sublist3r
+    - threatbook
+    - threatcrowd
+    - threatminer
+    - virustotal
+    - waybackarchive
+    - ximcx
+    - zoomeye
+recursive:
+    - alienvault
+    - binaryedge
+    - bufferover
+    - cebaidu
+    - certspotter
+    - certspotterold
+    - crtsh
+    - dnsdumpster
+    - hackertarget
+    - ipv4info
+    - passivetotal
+    - securitytrails
+    - sublist3r
+    - virustotal
+    - ximcx
+binaryedge: []
+censys: []
 certspotter: []
-passivetotal: 
+chaos: []
+dnsdb: []
+github: []
+intelx: []
+passivetotal: []
+recon: []
+robtex: []
 securitytrails: []
-shodan:
-github:
+shodan: []
+spyse: []
+threatbook: []
+urlscan: []
+virustotal: []
+zoomeye: []
+subfinder-version: 2.4.5

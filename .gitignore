@@ -2,5 +2,11 @@
 __pycache__/.*
 config/bitthebyte.yaml
 reports/*
-temp/*
+output/*
 test/*
+.init
+.idea
+.idea/*
+results.txt
+target.txt
+targets.txt

@@ -235,8 +235,8 @@ def detect_type(file):
 
 def usage():
     print("Version: {0}".format(__version__))
-    print("DNSRecon output file parser")
-    print("Usage: parser.py <options>\n")
+    print("DNSRecon output file parsers")
+    print("Usage: parsers.py <options>\n")
     print("Options:")
     print("   -h, --help               Show this help message and exit")
     print("   -f, --file    <file>     DNSRecon XML or CSV output file to parse.")
