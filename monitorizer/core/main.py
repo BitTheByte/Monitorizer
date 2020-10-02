@@ -177,6 +177,8 @@ class Monitorizer(ScanParser, Console):
             cmd, output = self.fmt_cmd(tool_name, target)
             output = self.run_and_return_output(cmd, output)
             self.progress['running_tools'].remove(tool_name)
+
+            flags.running_tool = ', '.join(self.progress['running_tools'])
             self.info(f"{tool_name} finished scanning {target}")
             return output
 
@@ -184,7 +186,7 @@ class Monitorizer(ScanParser, Console):
             return timed_scan(target, tool_name)
         except:
             self.error(
-                f"Maximum execution time of {self.scan_timeout} second(S) reached while running {tool_name} on {target}")
+                f"Maximum execution time of {self.scan_timeout} second(s) reached while running {tool_name} on {target}")
             cmd, output = self.fmt_cmd(tool_name, target)
             self.kill_by_cmd(cmd)
             return {"error": "timeout"}

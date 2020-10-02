@@ -13,6 +13,7 @@ changelog:
       - Added: -p/--port flag to set events server port
       - Added: ${MONITOZIER_ROOT}/docs/ folder
       - Fixed: Several typos
+      - Fixed: Running status tools don't always update
       - Changed: Console UI design
       - Changed: Config file structure
 
