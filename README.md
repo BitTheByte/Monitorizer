@@ -91,5 +91,14 @@ To Enable Slack commands you have to enable [Event Subscriptions](https://api.sl
 | freq       	| Set/Get scan frequency (in hours)                         	| @monitoizer freq or @monitoizer freq {number}                                	|                   
 
 
+# FAQ
+1) Scanning may hang on some targets for a long time
+    - Try running the tool with `-d` flag to debug the problem
+    - Edit the `timeout` flag at `config/default.yaml` to your desired time in **seconds**
+
+2) Slack's bot app don't respond to my commands
+    - Check your slack bot token 
+    - Reconfigure the tool using the [docs](/docs/get_started.md)
+
 # TODO
 Full todo list is at https://github.com/BitTheByte/Monitorizer/projects/1

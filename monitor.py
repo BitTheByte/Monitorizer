@@ -7,7 +7,7 @@ from monitorizer.core import flags
 from datetime import datetime
 from time import sleep
 import os
-
+import signal
 scanners = (
     "subfinder",
     "sublist3r",
@@ -17,6 +17,7 @@ scanners = (
 )
 
 monitorizer = Monitorizer()
+signal.signal(signal.SIGINT, monitorizer.on_kill)
 
 if not args.debug:
     monitorizer.clear()

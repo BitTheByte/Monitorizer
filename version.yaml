@@ -1,7 +1,23 @@
 version:
-  monitorizer: 2.3
-  toolkit: 1.4
+  monitorizer: 2.4
+  toolkit: 1.5
 
 changelog:
-  monitorizer: Added new integration for acunetix 
-  toolkit: Fixed amass binary
+  monitorizer: |
+    Monitorizer::CodeBase 2.4
+      - Codebase refactor
+      - Dropped support for Monitorizer < 2.2. they will not detect update notice messages
+      - Added: Timeout for scans
+      - Added: Exit clean up procedure
+      - Added: Scan time
+      - Added: -p/--port flag to set events server port
+      - Added: ${MONITOZIER_ROOT}/docs/ folder
+      - Fixed: Several typos
+      - Changed: Console UI design
+      - Changed: Config file structure
+
+  toolkit: |
+    Monitorizer::ToolKit 1.5
+      - Updated: sublist3r to 729d649ec5370730172bf6f5314aafd68c874124
+      - Updated: subfinder to v2.4.5
+      - Updated: amass to v3.10.4

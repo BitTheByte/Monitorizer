@@ -7,6 +7,7 @@ from monitorizer.globals import local_metadata
 from modules.portscan.scanner import masscan
 from monitorizer.core import flags
 from modules.server import server
+import requests
 import time
 
 
@@ -24,7 +25,12 @@ class Events(Report, Console, DNS):
 
     def start(self):
         server.run_server()
-        self.info(f"Started event server at http://0.0.0.0:{args.port}/slack")
+        try:
+            public_ip = requests.get('https://ipinfo.io/json').json()['ip']
+        except Exception as e:
+            print(e)
+            public_ip = "0.0.0.0"
+        self.info(f"Started event server at http://{public_ip}:{args.port}/slack")
         self.slack(f"Monitorizer framework v{local_metadata['version']['monitorizer']} started :tada:")
 
     def discover(self, new_domains, report_name):
