@@ -20,6 +20,9 @@ $ sudo pip3 install -r requirements.txt
 ```
 After installing the requirements now you're ready to go
 
+# Documentation
+https://docs.contour.so/BitTheByte/Monitorizer/getting-started
+
 # Configuration
 
 This tool requires a slack workspace to report the findings. Additionally you can use the included acunetix integration to scan the newly discoverd domains
