@@ -21,7 +21,7 @@ $ sudo pip3 install -r requirements.txt
 After installing the requirements now you're ready to go
 
 # Documentation
-https://docs.contour.so/BitTheByte/Monitorizer/getting-started
+https://docs.contour.so/BitTheByte/Monitorizer/README
 
 # Configuration
 
