@@ -14,7 +14,7 @@ Subdomain monitoring framework inspired by [subalert](https://github.com/yassine
 
   - This integration is enabled by default with no action from the user however if you wish to disable it or modify it's options edit `config/default.yaml`
 
-  - An allows running instance of `projectdiscovery/nuclei` that will scan ALL (not just the newly found) subdomains from targets in the watch list - only modify the watch list from slack commands e.g `@monitoizer add example.com`
+  - An always running instance of `projectdiscovery/nuclei` that will scan ALL (not just the newly found) subdomains from targets in the watch list - only modify the watch list from slack commands e.g `@monitoizer add example.com`
 
   - Keep in mind you're responsible for updating your local copy of nuclei templates at `modules/nuclei` from https://github.com/projectdiscovery/nuclei-templates
   
