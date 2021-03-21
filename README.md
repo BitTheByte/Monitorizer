@@ -9,6 +9,24 @@
 
 Subdomain monitoring framework inspired by [subalert](https://github.com/yassineaboukir/sublert) project
 
+# Scanners integration
+- Nuclei integration
+
+  - This integration is enabled by default with no action from the user however if you wish to disable it or modify it's options edit `config/default.yaml`
+
+  - An allows running instance of `projectdiscovery/nuclei` that will scan ALL (not just the newly found) subdomains from targets in the watch list - only modify the watch list from slack commands e.g `@monitoizer add example.com`
+
+  - Keep in mind you're responsible for updating your local copy of nuclei templates at `modules/nuclei` from https://github.com/projectdiscovery/nuclei-templates
+  
+
+
+- Acunetix integration
+  - This integration is disabled by default you must send `@monitoizer acunetix enable` to your running monitorizer instance to enable this integration
+
+  - You need to have your own Acunetix instance 
+
+  - On a newly discovered subdomain this integration will start new Acunetix scan 
+
 # Setting up the environment
 You need:
 - Python  >= 3.6 ( python 2 is not supported )
@@ -27,14 +45,20 @@ This tool requires a slack workspace to report the findings. Additionally you ca
 You need to edit the `config/default.yaml` 
 ```yaml
 report:
-  slack: 
+  slack: # required
     channel: CM8XXXXXX
     token: xoxb-XXXXXXXXXX-ZZZZZZZZZZ-YYYYYYYYYYYYYY
   
-  acunetix:
+  acunetix: # optional
       token: 63c19a6da79816b21429e5bb262daed863c19a6da79816b21429e5bb262daed8
       host:  acunetix.exmaple.com
       port:  3443
+
+settings:
+  nuclei:
+    enable: true
+    interval: 86400 # rescan all targets in the watch list every 24h
+    options: -impact high
 ```
 For more information see: [docs/get_started.md](/docs/get_started.md)
 

@@ -7,25 +7,25 @@ import datetime
 import os
 
 
-class Console(object):
+class Console:
     def time(self):
-        return " [%s][" % datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        return "[%s][" % datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
     def log(self, msg):
-        if args.verbose == True or args.debug:
-            print(self.time() + Fore.LIGHTBLACK_EX + "LOG" + Fore.RESET + "] " + msg.capitalize())
+        if args.verbose == True or  args.debug:
+            print(self.time() + Fore.LIGHTBLACK_EX + "LOG".ljust(5, ' ') + Fore.RESET + "] " + msg.capitalize())
 
     def info(self, msg):
-        print(self.time() + Fore.LIGHTBLUE_EX + "INFO" + Fore.RESET + "] " + msg.capitalize())
+        print(self.time() + Fore.LIGHTBLUE_EX + "INFO".ljust(5, ' ') + Fore.RESET + "] " + msg.capitalize())
 
     def error(self, msg):
-        print(self.time() + Fore.RED + "ERROR" + Fore.RESET + "] " + msg.capitalize())
+        print(self.time() + Fore.RED + "ERROR".ljust(5, ' ') + Fore.RESET + "] " + msg.capitalize())
 
     def warning(self, msg):
-        print(self.time() + Fore.YELLOW + "WARNING" + Fore.RESET + "] " + msg.capitalize())
+        print(self.time() + Fore.YELLOW + "WARNING".ljust(5, ' ') + Fore.RESET + "] " + msg.capitalize())
 
     def done(self, msg):
-        print(self.time() + Fore.GREEN + "SUCCESS" + Fore.RESET + "] " + msg.capitalize())
+        print(self.time() + Fore.GREEN + "SUCCESS".ljust(5, ' ') + Fore.RESET + "] " + msg.capitalize())
 
     def banner(self):
         print(banner_fmt)

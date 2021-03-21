@@ -1,24 +1,16 @@
 version:
-  monitorizer: 2.4
-  toolkit: 1.5
+  monitorizer: 2.5
+  toolkit: 1.6
 
 changelog:
   monitorizer: |
-    Monitorizer::CodeBase 2.4
-      - Codebase refactor
-      - Dropped support for Monitorizer < 2.2. they will not detect update notice messages
-      - Added: Timeout for scans
-      - Added: Exit clean up procedure
-      - Added: Scan time
-      - Added: -p/--port flag to set events server port
-      - Added: ${MONITOZIER_ROOT}/docs/ folder
-      - Fixed: Several typos
-      - Fixed: Running status tools don't always update
+    Monitorizer::CodeBase 2.5
+      - Added: new integration for /projectdiscovery/nuclei 
       - Changed: Console UI design
       - Changed: Config file structure
 
   toolkit: |
-    Monitorizer::ToolKit 1.5
+    Monitorizer::ToolKit 1.6
       - Updated: sublist3r to 729d649ec5370730172bf6f5314aafd68c874124
-      - Updated: subfinder to v2.4.5
-      - Updated: amass to v3.10.4
+      - Updated: subfinder to 28be10fd67069f8f0c7f4cc6b4391013d47f5259
+      - Updated: amass to v3.11.10

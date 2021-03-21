@@ -28,16 +28,16 @@ class ScanParser(object):
 
     def dnsrecon(self, data):
         domains = []
-        for line in data:
-            if line.strip() == 'Name':
+        for idx,line in enumerate(data):
+            if idx == 0:
                 continue
             domains.append(line.split(",")[1])
         return self.check(domains)
 
     def aiodnsbrute(self, data):
         domains = []
-        for line in data:
-            if line.strip() == 'Hostname':
+        for idx,line in enumerate(data):
+            if idx == 0:
                 continue
             domains.append(line.split(",")[0])
         return self.check(domains)

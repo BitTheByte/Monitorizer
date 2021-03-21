@@ -3,8 +3,8 @@ import yaml
 
 local_metadata = {
     "version": {
-        "monitorizer": 2.4,
-        "toolkit": 1.5
+        "monitorizer": 2.5,
+        "toolkit": 1.6
     }
 }
 

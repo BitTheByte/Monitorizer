@@ -1,5 +1,6 @@
 from monitorizer.core.main import Monitorizer
 from modules.event.on import Events
+from modules.nuclei.api import Nuclei
 
 from monitorizer.ui.arguments import args
 from monitorizer.core import flags
@@ -8,6 +9,10 @@ from datetime import datetime
 from time import sleep
 import os
 import signal
+
+
+#os._exit(1)
+
 scanners = (
     "subfinder",
     "sublist3r",
@@ -24,6 +29,7 @@ if not args.debug:
 
 monitorizer.banner()
 events = Events()
+nuclei = Nuclei()
 
 if os.path.isfile(args.watch):
     _watch_list = 'set([t.strip() for t in open(args.watch,"r").readlines()])'
@@ -37,7 +43,9 @@ else:
 monitorizer.set_config(args.config)
 monitorizer.initialize()
 monitorizer.self_check(scanners)
+nuclei.start_continuous_scanner()
 events.start()
+
 
 while 1:
     for target in eval(_watch_list):
@@ -77,8 +85,8 @@ while 1:
         if new_domains_filtered != {}:
             events.discover(new_domains_filtered, report_name)
 
-        if not args.debug:
-            monitorizer.clean_temp()
+        #if not args.debug:
+        #    monitorizer.clean_temp()
 
     flags.status = "idle"
     monitorizer.info(f"All targets scanned, sleeping for {flags.sleep_time} hour(s)")
