@@ -14,14 +14,14 @@ Subdomain monitoring framework inspired by [subalert](https://github.com/yassine
 
   - This integration is enabled by default with no action from the user however if you wish to disable it or modify it's options edit `config/default.yaml`
 
-  - An always running instance of `projectdiscovery/nuclei` that will scan ALL (not just the newly found) subdomains from targets in the watch list - only modify the watch list from slack commands e.g `@monitoizer add example.com`
+  - An always running instance of `projectdiscovery/nuclei` that will scan ALL (not just the newly found) subdomains from targets in the watch list - only modify the watch list from slack commands e.g `@monitorizer add example.com`
 
   - Keep in mind you're responsible for updating your local copy of nuclei templates at `modules/nuclei` from https://github.com/projectdiscovery/nuclei-templates
   
 
 
 - Acunetix integration
-  - This integration is disabled by default you must send `@monitoizer acunetix enable` to your running monitorizer instance to enable this integration
+  - This integration is disabled by default you must send `@monitorizer acunetix enable` to your running monitorizer instance to enable this integration
 
   - You need to have your own Acunetix instance 
 
@@ -105,14 +105,14 @@ To Enable Slack commands you have to enable [Event Subscriptions](https://api.sl
 
 | Command    	| Description                                               	| Usage                                                                        	|
 |------------	|-----------------------------------------------------------	|------------------------------------------------------------------------------	|
-| list       	| Lists all targets                                         	| @monitoizer list                                                             	|
-| add        	| Adds new target                                           	| @monitoizer add target.com or @monitoizer add target1.com, target2.com       	|
-| remove     	| Remove targets                                            	| @monitoizer remove target.com or @monitoizer remove target1.com, target2.com 	|
-| ping       	| Health check for the server                               	| @monitoizer ping                                                             	|
-| status     	| Prints the current status                                 	| @monitoizer status                                                           	|
-| concurrent 	| Set/Get number of concurrent scanners                     	| @monitoizer concurrent or @monitoizer concurrent {number}                    	|
-| acunetix   	| Enabled/Disable sending new discoverd targets to acunetix 	| @monitoizer acunetix enable or @monitoizer acunetix disable                  	|
-| freq       	| Set/Get scan frequency (in hours)                         	| @monitoizer freq or @monitoizer freq {number}                                	|                   
+| list       	| Lists all targets                                         	| @monitorizer list                                                             	|
+| add        	| Adds new target                                           	| @monitorizer add target.com or @monitorizer add target1.com, target2.com       	|
+| remove     	| Remove targets                                            	| @monitorizer remove target.com or @monitorizer remove target1.com, target2.com 	|
+| ping       	| Health check for the server                               	| @monitorizer ping                                                             	|
+| status     	| Prints the current status                                 	| @monitorizer status                                                           	|
+| concurrent 	| Set/Get number of concurrent scanners                     	| @monitorizer concurrent or @monitorizer concurrent {number}                    	|
+| acunetix   	| Enabled/Disable sending new discoverd targets to acunetix 	| @monitorizer acunetix enable or @monitorizer acunetix disable                  	|
+| freq       	| Set/Get scan frequency (in hours)                         	| @monitorizer freq or @monitorizer freq {number}                                	|                   
 
 
 # FAQ
