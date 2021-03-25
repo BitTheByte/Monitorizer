@@ -14,3 +14,4 @@ tqdm
 aiodns
 pyyaml
 wrapt_timeout_decorator
+needlepy

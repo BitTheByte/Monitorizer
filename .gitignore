@@ -1,6 +1,7 @@
 *.pyc
 __pycache__/.*
 config/bitthebyte.yaml
+wordlists/small.txt
 reports/*
 output/*
 test/*

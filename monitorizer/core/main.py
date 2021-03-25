@@ -10,7 +10,6 @@ from modules.parsers.scan import ScanParser
 from monitorizer.ui.cli import Console
 
 from monitorizer.ui.arguments import args
-from monitorizer.core import multitask
 from monitorizer.core import flags
 from modules.event.on import Events
 
@@ -21,6 +20,7 @@ import signal
 import stat
 import yaml
 import glob
+import needle
 
 
 
@@ -61,7 +61,10 @@ class Monitorizer(ScanParser, Console):
 
     def self_check(self, scanners):
         for tool in scanners:
-            health_cmd = self.config[tool]['health']
+            toolconfig = self.config.get(tool, None)
+            if toolconfig == None:
+                continue
+            health_cmd = toolconfig['health']
             if self.exit_code(health_cmd) != 0:
                 self.error("Unable to execute %s make sure to install all requirements" % tool)
             else:
@@ -108,7 +111,7 @@ class Monitorizer(ScanParser, Console):
                 subprocess.check_call(cmd, shell=True)
             return self.parse(output)
         except Exception as e:
-            self.log("Error occurred during executing :: " + cmd + "\n" + str(e))
+            self.log("Error occurred during executing :: " + cmd + " - " + str(e))
             return False
 
     def merge_reports(self, target, exclude=[]):
@@ -137,6 +140,8 @@ class Monitorizer(ScanParser, Console):
 
     def clean_temp(self):
         for i in glob.glob("output/*"):
+            if "keep-" in i:
+                continue
             os.unlink(i)
         self.log("output/ directory is cleaned")
 
@@ -191,35 +196,24 @@ class Monitorizer(ScanParser, Console):
             self.kill_by_cmd(cmd)
             return {"error": "timeout"}
 
-    def on_scan_finish(self, result):
-        _return = result.ret
-        if not _return:
-            return
-        target, tool_name = result.args
 
-        if not target in self.progress.keys():
-            self.progress[target] = {}
-        if not "error" in _return.keys():
+    def mutliscan(self, scanners, target, concurrent=None):
+        for res in needle.GroupWorkers(kernel='threadpoolexecutor', target=self.scan_with, arguments=[(target, tool) for tool in scanners], concurrent=flags.concurrent):
+            if res._return == "RUNTIME_ERROR" or not res._return:
+                continue
+
+            _return = res._return
+            target, tool_name = res.arguments
+
+            if not target in self.progress.keys():
+                self.progress[target] = {}
+            
             self.progress[target].update(_return)
-
-    def mutliscan(self, scanners, target, concurrent=2):
-        channel = multitask.Channel()
-
-        for tool in scanners:
-            channel.append(target, tool)
-
-        multitask.workers(
-            target=self.scan_with,
-            channel=channel,
-            count=flags.concurrent,
-            callback=self.on_scan_finish
-        )
-        channel.wait()
-        channel.close()
 
         temp = self.progress[target]
         del self.progress[target]
         return temp
+
 
     def on_kill(self, sig, frame):
         Events().exit()
@@ -233,5 +227,5 @@ class Monitorizer(ScanParser, Console):
                 # If you have a better idea to do this please make a PR. Thanks :)
                 subprocess.Popen(f"sleep {delay}; kill -9 {pid} > /dev/null 2>&1", start_new_session=True, shell=True)
             delay += 1
-        self.info("Initiated procedure, subprocess(es) will exit soon .. bye!")
+        self.info("Initiated exit procedure, sub-process(es) will exit soon .. bye!")
         os._exit(1)

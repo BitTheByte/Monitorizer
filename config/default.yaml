@@ -9,11 +9,16 @@ report:
     token:
 
 settings:
+  nuclei:
+    enable: true
+    interval: 86400 # rescan all targets in the watch list every 24h
+    options: -impact high
+
   scan:
     timeout: 0 # global timeout for ALL tools in SECONDS, 0 = unlimited
 
 subfinder:
-  cmd: ./thirdparty/subfinder/subfinder -d {target} -t {threads} -config {config} -o {output} -v
+  cmd: ./thirdparty/subfinder/subfinder -d {target} -all -t {threads} -config {config} -o {output} -v
   health: ./thirdparty/subfinder/subfinder --version
   formats:
     config: config/thirdparty/subfinder.yaml
@@ -40,10 +45,9 @@ sublist3r:
     threads: 300
 
 amass:
-  cmd: ./thirdparty/amass/amass enum -passive -d {target} -config {config} -o {output} -w {alterations}
+  cmd: ./thirdparty/amass/amass enum -passive -d {target} -o {output} -aw {alterations} -w {wordlist}
   health: ./thirdparty/amass/amass --version
   formats:
-    config: config/thirdparty/amass.ini
     wordlist: wordlists/subdomains-top1mil.txt
     alterations: wordlists/alterations.txt
 

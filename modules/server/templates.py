@@ -9,7 +9,7 @@ help_msg = """*Welcome to Moniterzer help page* :robot_face:
 >> ping - check health
 >> status - returns application status
 >> concurrent - set/get number of concurrent working tools  (recommended=2)
->> acunetix - enabled/disable sending new discoverd targets to acunetix (default=disabled)
+>> acunetix - enable/disable sending new discoverd targets to acunetix (default=disabled)
 >> freq - set/get scan frequency in hours (default=24)
 """
 

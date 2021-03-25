@@ -7,16 +7,13 @@ sources:
     - alienvault
     - anubis
     - bufferover
-    - cebaidu
     - certspotter
-    - certspotterold
     - censys
     - chaos
     - crtsh
     - dnsdumpster
     - hackertarget
     - intelx
-    - ipv4info
     - passivetotal
     - robtex
     - riddler
@@ -33,10 +30,8 @@ all-sources:
     - archiveis
     - binaryedge
     - bufferover
-    - cebaidu
     - censys
     - certspotter
-    - certspotterold
     - chaos
     - commoncrawl
     - crtsh
@@ -44,7 +39,6 @@ all-sources:
     - dnsdb
     - github
     - hackertarget
-    - ipv4info
     - intelx
     - passivetotal
     - rapiddns
@@ -54,6 +48,7 @@ all-sources:
     - securitytrails
     - shodan
     - sitedossier
+    - sonarsearch
     - spyse
     - sublist3r
     - threatbook
@@ -61,24 +56,20 @@ all-sources:
     - threatminer
     - virustotal
     - waybackarchive
-    - ximcx
     - zoomeye
 recursive:
     - alienvault
     - binaryedge
     - bufferover
-    - cebaidu
     - certspotter
-    - certspotterold
     - crtsh
     - dnsdumpster
     - hackertarget
-    - ipv4info
     - passivetotal
     - securitytrails
+    - sonarsearch
     - sublist3r
     - virustotal
-    - ximcx
 binaryedge: []
 censys: []
 certspotter: []
@@ -96,4 +87,4 @@ threatbook: []
 urlscan: []
 virustotal: []
 zoomeye: []
-subfinder-version: 2.4.5
+subfinder-version: 2.4.6
