@@ -29,7 +29,8 @@ class Monitorizer(ScanParser, Console):
         self.chmod_tools = [
             './thirdparty/amass/amass',
             './thirdparty/subfinder/subfinder',
-            './thirdparty/masscan/masscan'
+            './thirdparty/masscan/masscan',
+            './modules/nuclei/bin/nuclei'
         ]
         self.create_dirs = ['reports', 'output']
         self.config = None
