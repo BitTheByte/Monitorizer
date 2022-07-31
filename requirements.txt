@@ -15,3 +15,4 @@ aiodns
 pyyaml
 wrapt_timeout_decorator
 needlepy
+werkzeug==2.0.0
