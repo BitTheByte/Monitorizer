@@ -12,7 +12,7 @@ settings:
   nuclei:
     enable: true
     interval: 86400 # rescan all targets in the watch list every 24h
-    options: -impact high
+    options: -severity high
 
   scan:
     timeout: 0 # global timeout for ALL tools in SECONDS, 0 = unlimited

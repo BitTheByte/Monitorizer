@@ -14,3 +14,6 @@ changelog:
       - Updated: sublist3r to 729d649ec5370730172bf6f5314aafd68c874124
       - Updated: subfinder to 28be10fd67069f8f0c7f4cc6b4391013d47f5259
       - Updated: amass to v3.11.10
+      - Updated subfinder to  v2.5.5
+      - Updated nuclei to v2.8.9
+      - Updated amass to v3.21.2
