@@ -11,3 +11,5 @@ test/*
 results.txt
 target.txt
 targets.txt
+.vscode/settings.json
+.vscode/diff/vulsCount.txt
