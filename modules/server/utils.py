@@ -14,11 +14,11 @@ def rewrite_watchlist(watchlist):
 
 def is_alive(url):
     try:
-        requests.head('https://' + url,timeout=25)
+        requests.head(f'https://{url}', timeout=25)
         return 1
     except:
         try:
-            requests.head('http://'  + url,timeout=25)
+            requests.head(f'http://{url}', timeout=25)
             return 1
         except:
             return 0

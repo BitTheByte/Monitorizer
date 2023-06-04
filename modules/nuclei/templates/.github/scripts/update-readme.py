@@ -3,7 +3,7 @@ import glob
 import subprocess
 
 def countTpl(path):
-	return len(glob.glob(path + "/*.*"))
+	return len(glob.glob(f"{path}/*.*"))
 
 def command(args, start=None, end=None):
 	return "\n".join(subprocess.run(args, text=True, capture_output=True).stdout.split("\n")[start:end])[:-1]
@@ -13,6 +13,5 @@ if __name__ == "__main__":
 	template = eval(open(".github/scripts/README.tmpl", "r").read())
 
 	print(template)
-	f = open("README.md", "w")
-	f.write(template)
-	f.close()
+	with open("README.md", "w") as f:
+		f.write(template)

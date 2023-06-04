@@ -74,9 +74,8 @@ class DnsHelper:
         else:
             res = dns.resolver.Resolver(configure=True)
 
-        tcp = True if self._proto == "tcp" else False
-        answers = res.query(target, type, tcp=tcp)
-        return answers
+        tcp = self._proto == "tcp"
+        return res.query(target, type, tcp=tcp)
 
     def query(self, q, where, timeout=None, port=53, af=None, source=None, source_port=0, one_rr_per_rrset=False):
 
@@ -97,7 +96,7 @@ class DnsHelper:
         the IP Address it resolves to. It will also return CNAME data.
         """
         address = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         try:
             ipv4_answers = self._res.query(host_trg, 'A', tcp=tcp)
             for ardata in ipv4_answers.response.answer:
@@ -121,7 +120,7 @@ class DnsHelper:
         the IP Address it resolves to. It will also return CNAME data.
         """
         address = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         try:
             ipv6_answers = self._res.query(host_trg, 'AAAA', tcp=tcp)
             for ardata in ipv6_answers.response.answer:
@@ -156,7 +155,7 @@ class DnsHelper:
         address of the host both in IPv4 and IPv6. Returns an Array
         """
         mx_records = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         answers = self._res.query(self._domain, 'MX', tcp=tcp)
         for rdata in answers:
             try:
@@ -192,15 +191,17 @@ class DnsHelper:
         address of the host both in IPv4 and IPv6. Returns an Array.
         """
         name_servers = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         answer = self._res.query(self._domain, 'NS', tcp=tcp)
         if answer is not None:
             for aa in answer:
                 name = aa.target.to_text()[:-1]
                 ip_addrs = self.get_ip(name)
-                for addresses in ip_addrs:
-                    if re.search(r'^A', addresses[0]):
-                        name_servers.append(['NS', name, addresses[2]])
+                name_servers.extend(
+                    ['NS', name, addresses[2]]
+                    for addresses in ip_addrs
+                    if re.search(r'^A', addresses[0])
+                )
         return name_servers
 
     def get_soa(self):
@@ -209,9 +210,9 @@ class DnsHelper:
         address of the host both in IPv4 and IPv6. Returns an Array.
         """
         soa_records = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         querymsg = dns.message.make_query(self._domain, dns.rdatatype.SOA)
-        
+
         try:
             if tcp:
                 response = dns.query.tcp(querymsg, self._res.nameservers[0], self._res.timeout)
@@ -267,7 +268,7 @@ class DnsHelper:
         Prints the string for the SPF Record and Returns the string
         """
         spf_record = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         try:
             answers = self._res.query(self._domain, 'SPF', tcp=tcp)
             for rdata in answers:
@@ -283,7 +284,7 @@ class DnsHelper:
         Function for TXT Record resolving returns the string.
         """
         txt_record = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         if target is None:
             target = self._domain
         try:
@@ -301,7 +302,7 @@ class DnsHelper:
         Function for resolving PTR Record given it's IPv4 or IPv6 Address.
         """
         found_ptr = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         n = dns.reversename.from_address(ipaddress)
         try:
             answers = self._res.query(n, 'PTR', tcp=tcp)
@@ -319,7 +320,7 @@ class DnsHelper:
         Function for resolving SRV Records.
         """
         record = []
-        tcp = True if self._proto == "tcp" else False
+        tcp = self._proto == "tcp"
         try:
             answers = self._res.query(host, 'SRV', tcp=tcp)
             for a in answers:
@@ -328,14 +329,12 @@ class DnsHelper:
                 else:
                     target = a.target.to_text()
 
-                ips = self.get_ip(target)
-
-                if ips:
-                    for ip in ips:
-                        if re.search('(^A|AAAA)', ip[0]):
-                            record.append(['SRV', host, target, ip[2],
-                                          str(a.port), str(a.weight)])
-
+                if ips := self.get_ip(target):
+                    record.extend(
+                        ['SRV', host, target, ip[2], str(a.port), str(a.weight)]
+                        for ip in ips
+                        if re.search('(^A|AAAA)', ip[0])
+                    )
                 else:
                     record.append(['SRV', host, target, "no_ip",
                                   str(a.port), str(a.weight)])
@@ -348,9 +347,8 @@ class DnsHelper:
         Function for querying for a NSEC record and retrieving the rdata object.
         This function is used mostly for performing a Zone Walk against a zone.
         """
-        tcp = True if self._proto == "tcp" else False
-        answer = self._res.query(host, 'NSEC', tcp=tcp)
-        return answer
+        tcp = self._proto == "tcp"
+        return self._res.query(host, 'NSEC', tcp=tcp)
 
     def from_wire(self, xfr, zone_factory=Zone, relativize=True):
         """
@@ -360,10 +358,7 @@ class DnsHelper:
         z = None
         for r in xfr:
             if z is None:
-                if relativize:
-                    origin = r.origin
-                else:
-                    origin = r.answer[0].name
+                origin = r.origin if relativize else r.answer[0].name
                 rdclass = r.answer[0].rdclass
                 z = zone_factory(origin, rdclass, relativize=relativize)
             for rrset in r.answer:

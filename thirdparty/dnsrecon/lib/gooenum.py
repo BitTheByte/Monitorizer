@@ -47,9 +47,9 @@ def scrape_google(dom):
     user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
 
     for n in searches:
-        url = "https://www.google.com/search?hl=en&lr=&ie=UTF-8&q=site%3A" + dom + "&start=" + n + "&sa=N&filter=0&num=100"
+        url = f"https://www.google.com/search?hl=en&lr=&ie=UTF-8&q=site%3A{dom}&start={n}&sa=N&filter=0&num=100"
         headers={'User-Agent':user_agent,} 
-        
+
         try:
             sock = urllib.urlopen(url)
             data = sock.read()

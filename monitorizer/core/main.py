@@ -63,11 +63,11 @@ class Monitorizer(ScanParser, Console):
     def self_check(self, scanners):
         for tool in scanners:
             toolconfig = self.config.get(tool, None)
-            if toolconfig == None:
+            if toolconfig is None:
                 continue
             health_cmd = toolconfig['health']
             if self.exit_code(health_cmd) != 0:
-                self.error("Unable to execute %s make sure to install all requirements" % tool)
+                self.error(f"Unable to execute {tool} make sure to install all requirements")
             else:
                 self.log(f"Started {tool} without any errors/problems")
 
@@ -104,7 +104,7 @@ class Monitorizer(ScanParser, Console):
             self.log(f"Changed permissions of {tool}")
 
     def run_and_return_output(self, cmd, output, silent=0):
-        self.log("Running command :: " + cmd)
+        self.log(f"Running command :: {cmd}")
         try:
             if not args.debug:
                 subprocess.check_call(cmd, stdout=open(os.devnull, 'a+'), stderr=subprocess.STDOUT, shell=True)
@@ -112,7 +112,7 @@ class Monitorizer(ScanParser, Console):
                 subprocess.check_call(cmd, shell=True)
             return self.parse(output)
         except Exception as e:
-            self.log("Error occurred during executing :: " + cmd + " - " + str(e))
+            self.log(f"Error occurred during executing :: {cmd} - {str(e)}")
             return False
 
     def merge_reports(self, target, exclude=[]):
@@ -122,8 +122,7 @@ class Monitorizer(ScanParser, Console):
                 if path == f"reports/{target}_{e}":
                     break
             else:
-                for subdomain in open(path, 'r').read().split('\n'):
-                    result.append(subdomain)
+                result.extend(iter(open(path, 'r').read().split('\n')))
         return set(result)
 
     def merge_scans(self, scan):
@@ -177,7 +176,7 @@ class Monitorizer(ScanParser, Console):
             self.progress['running_tools'].append(tool_name)
             flags.running_tool = ', '.join(self.progress['running_tools'])
 
-            if not tool_name in self.config.keys():
+            if tool_name not in self.config.keys():
                 return False
 
             cmd, output = self.fmt_cmd(tool_name, target)
@@ -206,9 +205,9 @@ class Monitorizer(ScanParser, Console):
             _return = res._return
             target, tool_name = res.arguments
 
-            if not target in self.progress.keys():
+            if target not in self.progress.keys():
                 self.progress[target] = {}
-            
+
             self.progress[target].update(_return)
 
         temp = self.progress[target]
@@ -219,14 +218,12 @@ class Monitorizer(ScanParser, Console):
     def on_kill(self, sig, frame):
         Events().exit()
         pids = []
-        delay = 10
-        for cmd in self.progress["formated_cmds"]:
+        for delay, cmd in enumerate(self.progress["formated_cmds"], start=10):
             pids += self.pids_by_cmd(cmd)
             for pid in pids:
                 # Yes yes, it's vulnerable to time of check time of use attack
                 # However I don't think it's that high chance of it to happen if not exploited intentionally
                 # If you have a better idea to do this please make a PR. Thanks :)
                 subprocess.Popen(f"sleep {delay}; kill -9 {pid} > /dev/null 2>&1", start_new_session=True, shell=True)
-            delay += 1
         self.info("Initiated exit procedure, sub-process(es) will exit soon .. bye!")
         os._exit(1)
