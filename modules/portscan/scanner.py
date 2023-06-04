@@ -6,10 +6,8 @@ import os
 
 
 def get_temp_path():
-	temp_file = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names())+next(tempfile._get_candidate_names())) 
-	if os.path.isfile(temp_file):
-		return get_temp_path()
-	return temp_file
+	temp_file = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names())+next(tempfile._get_candidate_names()))
+	return get_temp_path() if os.path.isfile(temp_file) else temp_file
 
 def _masscan_scan_reader(path):
 	if not os.path.isfile(path):
@@ -18,10 +16,7 @@ def _masscan_scan_reader(path):
 	scan_file = open(path,'r').read()
 	ports = [x.strip() for x in re.findall(r'portid="(.*?)"', scan_file) if x.strip()]
 
-	if len(ports) == 0:
-		return "no open ports"
-
-	return ','.join(ports)
+	return "no open ports" if not ports else ','.join(ports)
 
 def masscan(target):
 	output = get_temp_path()

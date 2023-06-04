@@ -35,17 +35,17 @@ def scrape_crtsh(dom):
     """
     results = []
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0'}
-    url = 'https://crt.sh/?q=%25.{}'.format(dom)
+    url = f'https://crt.sh/?q=%25.{dom}'
 
     req = Request(url=url, headers=headers)
     try:
         resp = urlopen(req)
         data = resp.read()
     except URLError as e:
-        print_error('Connection with crt.sh failed. Reason: "{}"'.format(e.reason))
+        print_error(f'Connection with crt.sh failed. Reason: "{e.reason}"')
         return results
     except HTTPError as e:
-        print_error('Bad http status from crt.sh: "{}"'.format(e.code))
+        print_error(f'Bad http status from crt.sh: "{e.code}"')
         return results
 
     root = etree.HTML(data)
@@ -56,10 +56,10 @@ def scrape_crtsh(dom):
 
     for ent in tbl:
         sub_dom = ent.text
-        if not sub_dom.endswith('.' + dom):
+        if not sub_dom.endswith(f'.{dom}'):
             continue
         if sub_dom.startswith('*.'):
-            print_status("\t {} wildcard".format(sub_dom))
+            print_status(f"\t {sub_dom} wildcard")
             continue
         if sub_dom not in results:
             results.append(sub_dom)

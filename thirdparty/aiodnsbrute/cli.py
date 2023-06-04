@@ -71,23 +71,19 @@ class aioDNSBrute(object):
             except IndexError:
                 self.logger.error(f"Couldn't parse exception: {future.exception()}")
             # handle the DNS errors we expect to receive, show user unexpected errors
-            if err_number == 4:
+            if err_number == 4 or err_number != 12 and err_number == 1:
                 # This is domain name not found, ignore it
                 pass
             elif err_number == 12:
                 # Timeout from DNS server
                 self.logger.warn(f"Timeout for {name}")
-            elif err_number == 1:
-                # Server answered with no data
-                pass
             else:
                 self.logger.error(
                     f"{name} generated an unexpected exception: {future.exception()}"
                 )
-            # for debugging/troubleshoooting keep a list of errors
-            # self.errors.append({'hostname': name, 'error': err_text})
+                # for debugging/troubleshoooting keep a list of errors
+                # self.errors.append({'hostname': name, 'error': err_text})
 
-        # parse and output and store results.
         else:
             if self.lookup_type == "query":
                 ips = [ip.host for ip in future.result()]
@@ -95,7 +91,7 @@ class aioDNSBrute(object):
                 row = f"{name:<30}\t{ips}"
             elif self.lookup_type == "gethostbyname":
                 r = future.result()
-                ips = [ip for ip in r.addresses]
+                ips = list(r.addresses)
                 if name == r.name:
                     cname = False
                     n = f"""{name:<30}\t{f"{'':<35}" if self.verbosity >= 2 else ""}"""
@@ -180,7 +176,7 @@ class aioDNSBrute(object):
         if wildcard:
             # 63 chars is the max allowed segment length, there is practically no chance that it will be a legit record
             random_sld = (
-                lambda: f'{"".join(random.choice(string.ascii_lowercase + string.digits) for i in range(63))}'
+                lambda: f'{"".join(random.choice(string.ascii_lowercase + string.digits) for _ in range(63))}'
             )
             try:
                 self.lookup_type = "query"
@@ -189,9 +185,7 @@ class aioDNSBrute(object):
                 )
             except aiodns.error.DNSError as err:
                 # we expect that the record will not exist and error 4 will be thrown
-                self.logger.info(
-                    f"No wildcard response was detected for this domain."
-                )
+                self.logger.info("No wildcard response was detected for this domain.")
                 wc_check = None
             finally:
                 if wc_check is not None:

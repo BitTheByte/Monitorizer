@@ -29,31 +29,33 @@ def command_ping(args):
 
 
 def command_help(args):
-    code_base_update = True if float(local_metadata["version"]["monitorizer"]) < float(
-        metadata_github["version"]["monitorizer"]) else False
-    toolkit_update = True if float(local_metadata["version"]["toolkit"]) < float(
-        metadata_github["version"]["toolkit"]) else False
+    code_base_update = float(local_metadata["version"]["monitorizer"]) < float(
+        metadata_github["version"]["monitorizer"]
+    )
+    toolkit_update = float(local_metadata["version"]["toolkit"]) < float(
+        metadata_github["version"]["toolkit"]
+    )
 
-    if code_base_update == True and toolkit_update == False:
-        return templates.help_msg.replace("{warning1}\n", "").format(
-            warning0=templates.update_msg_codebase.format(
-                metadata_github['changelog']['monitorizer']
+    if code_base_update:
+        if not toolkit_update:
+            return templates.help_msg.replace("{warning1}\n", "").format(
+                warning0=templates.update_msg_codebase.format(
+                    metadata_github['changelog']['monitorizer']
+                )
             )
-        )
 
-    if toolkit_update == True and code_base_update == False:
-        return templates.help_msg.replace("{warning1}\n", "").format(
-            warning0=templates.update_msg_toolkit.format(
-                metadata_github['changelog']['toolkit']
-            )
-        )
-
-    if toolkit_update == True and code_base_update == True:
         return templates.help_msg.format(
             warning0=templates.update_msg_codebase.format(
                 metadata_github['changelog']['monitorizer']
             ),
             warning1=templates.update_msg_toolkit.format(
+                metadata_github['changelog']['toolkit']
+            )
+        )
+
+    if toolkit_update:
+        return templates.help_msg.replace("{warning1}\n", "").format(
+            warning0=templates.update_msg_toolkit.format(
                 metadata_github['changelog']['toolkit']
             )
         )
@@ -71,47 +73,45 @@ def command_add(args):
         alive_targets.append(target)
 
     rewrite_watchlist(watchlist)
-    return "Added {} target(s) to watching list".format(len(alive_targets))
+    return f"Added {len(alive_targets)} target(s) to watching list"
 
 
 def command_remove(args):
     for target in args:
-        if not target in watchlist:
+        if target not in watchlist:
             continue
         watchlist.remove(target)
 
     rewrite_watchlist(watchlist)
-    return "Removed {} target(s) from watching list".format(len(args))
+    return f"Removed {len(args)} target(s) from watching list"
 
 
 def command_list(args):
-    msg = ""
     targets = reload_watchlist()
     if len(targets) == 0:
         return "Watchlist is empty"
-    for target in targets:
-        msg += templates.target.format(target) + "\n"
+    msg = "".join(templates.target.format(target) + "\n" for target in targets)
     return msg[:-1]
 
 
 def command_freq(args):
     if len(args) == 0:
-        return "Scanning frequency is one scan every {} hour(s)".format(flags.sleep_time)
+        return f"Scanning frequency is one scan every {flags.sleep_time} hour(s)"
 
     if str(args[0]).isdigit():
         flags.sleep_time = int(args[0])
-        return "Scanning frequency updated to one scan every {} hour(s)".format(args[0])
+        return f"Scanning frequency updated to one scan every {args[0]} hour(s)"
     else:
         return "Invalid number"
 
 
 def command_concurrent(args):
     if len(args) == 0:
-        return "Concurrent working tools is {}/process".format(flags.concurrent)
+        return f"Concurrent working tools is {flags.concurrent}/process"
 
     if str(args[0]).isdigit():
         flags.concurrent = int(args[0])
-        return "Updated concurrent working tools to {}/process".format(args[0])
+        return f"Updated concurrent working tools to {args[0]}/process"
     else:
         return "Invalid number"
 
@@ -175,20 +175,17 @@ def mention_handler(data):
             if "text" in child:
                 message.append(child['text'].strip())
 
-    if message == []:
+    if not message:
         return "event->app_mention::empty_message"
 
     parent_command = message[0]
-    if len(message) == 1 and not " " in parent_command:
+    if len(message) == 1 and " " not in parent_command:
         parent_command = message[0]
         command_arguments = []
 
     elif " " in parent_command:
         parent_command = parent_command.split(" ")
-        if len(parent_command) > 1:
-            command_arguments = parent_command[1::]
-        else:
-            command_arguments = []
+        command_arguments = parent_command[1::] if len(parent_command) > 1 else []
         parent_command = parent_command[0]
     else:
         parent_command = message[0]

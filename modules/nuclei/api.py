@@ -36,16 +36,14 @@ class Nuclei(Report, Monitorizer, Console):
     def same(self, line1, line2):
         if line1 == '' or line2 == '':
             return False
-        
-        if not ']' in line1 or not ']' in line2:
+
+        if ']' not in line1 or ']' not in line2:
             return False
 
         line1 = line1.split("] ", 1)[1]
         line2 = line2.split("] ", 1)[1]
 
-        if line1 == line2:
-            return True
-        return False
+        return line1 == line2
 
 
     def compare(self, old_report, new_report):
@@ -64,19 +62,19 @@ class Nuclei(Report, Monitorizer, Console):
 
         watchlist  = reload_watchlist()
         subdomains = []
-        
+
         for target in watchlist:
             subdomains += list( self.merge_reports(target) )
-        
+
         report_name   = str(datetime.now().strftime("%Y%m%d_%s"))
 
-        nuclei_input  = "output/nuclei_input_%s" % report_name
-        nuclei_output = "reports/nuclei_%s" % report_name
+        nuclei_input = f"output/nuclei_input_{report_name}"
+        nuclei_output = f"reports/nuclei_{report_name}"
 
         resolved_subs = set([])
 
         for cp in needle.GroupWorkers(kernel='threadpoolexecutor', target=self.resolve, arguments=[[sub] for sub in subdomains], concurrent=50):
-            if cp._return == None or cp._return == "RUNTIME_ERROR":
+            if cp._return is None or cp._return == "RUNTIME_ERROR":
                 continue
             resolved_subs.add(cp._return)
 
@@ -105,10 +103,10 @@ class Nuclei(Report, Monitorizer, Console):
         def _continuous():
             while 1:
                 self.scan()
-                
-                if self.nuclei_interval == None:
+
+                if self.nuclei_interval is None:
                     self.nuclei_interval = 24*60*60
-                
+
                 self.log(f"nuclei scanning thread is sleeping for {self.nuclei_interval / 60 / 60} hour(s)")
                 time.sleep(self.nuclei_interval)
 

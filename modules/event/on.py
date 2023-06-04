@@ -34,13 +34,12 @@ class Events(Report, Console, DNS):
         self.slack(f"Monitorizer framework v{local_metadata['version']['monitorizer']} started :tada:")
 
     def discover(self, new_domains, report_name):
-        new_domains_filtered = {}
-        for domain, foundby in new_domains.items():
-            if self.nxdomain(domain) and domain.strip() != '':
-                continue
-            new_domains_filtered.update({domain: foundby})
-
-        if new_domains_filtered == {}:
+        new_domains_filtered = {
+            domain: foundby
+            for domain, foundby in new_domains.items()
+            if not self.nxdomain(domain) or domain.strip() == ''
+        }
+        if not new_domains_filtered:
             return
 
         msg = f"Monitorizer Report ::: {report_name}\n"

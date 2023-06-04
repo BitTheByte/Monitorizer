@@ -41,14 +41,14 @@ except:
 # Check if we are running this on windows platform
 is_windows = sys.platform.startswith('win')
 
+# Windows deserves coloring too :D
+G = '\033[92m'  # green
+Y = '\033[93m'  # yellow
+B = '\033[94m'  # blue
+R = '\033[91m'  # red
+W = '\033[0m'   # white
 # Console Colors
 if is_windows:
-    # Windows deserves coloring too :D
-    G = '\033[92m'  # green
-    Y = '\033[93m'  # yellow
-    B = '\033[94m'  # blue
-    R = '\033[91m'  # red
-    W = '\033[0m'   # white
     try:
         import win_unicode_console , colorama
         win_unicode_console.enable()
@@ -57,14 +57,6 @@ if is_windows:
     except:
         print("[!] Error: Coloring libraries not installed, no coloring will be used [Check the readme]")
         G = Y = B = R = W = G = Y = B = R = W = ''
-
-
-else:
-    G = '\033[92m'  # green
-    Y = '\033[93m'  # yellow
-    B = '\033[94m'  # blue
-    R = '\033[91m'  # red
-    W = '\033[0m'   # white
 
 def no_color():
     global G, Y, B, R, W
@@ -85,8 +77,8 @@ def banner():
 
 def parser_error(errmsg):
     banner()
-    print("Usage: python " + sys.argv[0] + " [Options] use -h for help")
-    print(R + "Error: " + errmsg + W)
+    print(f"Usage: python {sys.argv[0]} [Options] use -h for help")
+    print(f"{R}Error: {errmsg}{W}")
     sys.exit()
 
 
@@ -108,7 +100,7 @@ def parse_args():
 
 def write_file(filename, subdomains):
     # saving subdomains results to output file
-    print("%s[-] Saving results to file: %s%s%s%s" % (Y, W, R, filename, W))
+    print(f"{Y}[-] Saving results to file: {W}{R}{filename}{W}")
     with open(str(filename), 'wt') as f:
         for subdomain in subdomains:
             f.write(subdomain + os.linesep)
@@ -135,9 +127,7 @@ def subdomain_sorting_key(hostname):
 
     """
     parts = hostname.split('.')[::-1]
-    if parts[-1] == 'www':
-        return parts[:-1], 1
-    return parts, 0
+    return (parts[:-1], 1) if parts[-1] == 'www' else (parts, 0)
 
 
 class enumratorBase(object):
@@ -166,7 +156,7 @@ class enumratorBase(object):
 
     def print_banner(self):
         """ subclass can override this if they want a fancy banner :)"""
-        self.print_(G + "[-] Searching now in %s.." % (self.engine_name) + W)
+        self.print_(f"{G}[-] Searching now in {self.engine_name}..{W}")
         return
 
     def send_req(self, query, page_no=1):
@@ -184,14 +174,10 @@ class enumratorBase(object):
         return response.text if hasattr(response, "text") else response.content
 
     def check_max_subdomains(self, count):
-        if self.MAX_DOMAINS == 0:
-            return False
-        return count >= self.MAX_DOMAINS
+        return False if self.MAX_DOMAINS == 0 else count >= self.MAX_DOMAINS
 
     def check_max_pages(self, num):
-        if self.MAX_PAGES == 0:
-            return False
-        return num >= self.MAX_PAGES
+        return False if self.MAX_PAGES == 0 else num >= self.MAX_PAGES
 
     # override
     def extract_domains(self, resp):
@@ -282,18 +268,18 @@ class GoogleEnum(enumratorBaseThreaded):
         return
 
     def extract_domains(self, resp):
-        links_list = list()
+        links_list = []
         link_regx = re.compile('<cite.*?>(.*?)<\/cite>')
         try:
             links_list = link_regx.findall(resp)
             for link in links_list:
                 link = re.sub('<span.*>', '', link)
                 if not link.startswith('http'):
-                    link = "http://" + link
+                    link = f"http://{link}"
                 subdomain = urlparse.urlparse(link).netloc
                 if subdomain and subdomain not in self.subdomains and subdomain != self.domain:
                     if self.verbose:
-                        self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                        self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                     self.subdomains.append(subdomain.strip())
         except Exception:
             pass
@@ -301,8 +287,8 @@ class GoogleEnum(enumratorBaseThreaded):
 
     def check_response_errors(self, resp):
         if (type(resp) is str or type(resp) is unicode) and 'Our systems have detected unusual traffic' in resp:
-            self.print_(R + "[!] Error: Google probably now is blocking our requests" + W)
-            self.print_(R + "[~] Finished now the Google Enumeration ..." + W)
+            self.print_(f"{R}[!] Error: Google probably now is blocking our requests{W}")
+            self.print_(f"{R}[~] Finished now the Google Enumeration ...{W}")
             return False
         return True
 
@@ -311,13 +297,11 @@ class GoogleEnum(enumratorBaseThreaded):
         return
 
     def generate_query(self):
-        if self.subdomains:
-            fmt = 'site:{domain} -www.{domain} -{found}'
-            found = ' -'.join(self.subdomains[:self.MAX_DOMAINS - 2])
-            query = fmt.format(domain=self.domain, found=found)
-        else:
-            query = "site:{domain} -www.{domain}".format(domain=self.domain)
-        return query
+        if not self.subdomains:
+            return "site:{domain} -www.{domain}".format(domain=self.domain)
+        fmt = 'site:{domain} -www.{domain} -{found}'
+        found = ' -'.join(self.subdomains[:self.MAX_DOMAINS - 2])
+        return fmt.format(domain=self.domain, found=found)
 
 
 class YahooEnum(enumratorBaseThreaded):
@@ -342,13 +326,13 @@ class YahooEnum(enumratorBaseThreaded):
             for link in links_list:
                 link = re.sub("<(\/)?b>", "", link)
                 if not link.startswith('http'):
-                    link = "http://" + link
+                    link = f"http://{link}"
                 subdomain = urlparse.urlparse(link).netloc
                 if not subdomain.endswith(self.domain):
                     continue
                 if subdomain and subdomain not in self.subdomains and subdomain != self.domain:
                     if self.verbose:
-                        self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                        self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                     self.subdomains.append(subdomain.strip())
         except Exception:
             pass
@@ -362,13 +346,11 @@ class YahooEnum(enumratorBaseThreaded):
         return num + 10
 
     def generate_query(self):
-        if self.subdomains:
-            fmt = 'site:{domain} -domain:www.{domain} -domain:{found}'
-            found = ' -domain:'.join(self.subdomains[:77])
-            query = fmt.format(domain=self.domain, found=found)
-        else:
-            query = "site:{domain}".format(domain=self.domain)
-        return query
+        if not self.subdomains:
+            return "site:{domain}".format(domain=self.domain)
+        fmt = 'site:{domain} -domain:www.{domain} -domain:{found}'
+        found = ' -domain:'.join(self.subdomains[:77])
+        return fmt.format(domain=self.domain, found=found)
 
 
 class AskEnum(enumratorBaseThreaded):
@@ -383,17 +365,17 @@ class AskEnum(enumratorBaseThreaded):
         return
 
     def extract_domains(self, resp):
-        links_list = list()
+        links_list = []
         link_regx = re.compile('<p class="web-result-url">(.*?)</p>')
         try:
             links_list = link_regx.findall(resp)
             for link in links_list:
                 if not link.startswith('http'):
-                    link = "http://" + link
+                    link = f"http://{link}"
                 subdomain = urlparse.urlparse(link).netloc
                 if subdomain not in self.subdomains and subdomain != self.domain:
                     if self.verbose:
-                        self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                        self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                     self.subdomains.append(subdomain.strip())
         except Exception:
             pass
@@ -404,14 +386,12 @@ class AskEnum(enumratorBaseThreaded):
         return num + 1
 
     def generate_query(self):
-        if self.subdomains:
-            fmt = 'site:{domain} -www.{domain} -{found}'
-            found = ' -'.join(self.subdomains[:self.MAX_DOMAINS])
-            query = fmt.format(domain=self.domain, found=found)
-        else:
-            query = "site:{domain} -www.{domain}".format(domain=self.domain)
+        if not self.subdomains:
+            return "site:{domain} -www.{domain}".format(domain=self.domain)
 
-        return query
+        fmt = 'site:{domain} -www.{domain} -{found}'
+        found = ' -'.join(self.subdomains[:self.MAX_DOMAINS])
+        return fmt.format(domain=self.domain, found=found)
 
 
 class BingEnum(enumratorBaseThreaded):
@@ -427,7 +407,7 @@ class BingEnum(enumratorBaseThreaded):
         return
 
     def extract_domains(self, resp):
-        links_list = list()
+        links_list = []
         link_regx = re.compile('<li class="b_algo"><h2><a href="(.*?)"')
         link_regx2 = re.compile('<div class="b_title"><h2><a href="(.*?)"')
         try:
@@ -438,11 +418,11 @@ class BingEnum(enumratorBaseThreaded):
             for link in links_list:
                 link = re.sub('<(\/)?strong>|<span.*?>|<|>', '', link)
                 if not link.startswith('http'):
-                    link = "http://" + link
+                    link = f"http://{link}"
                 subdomain = urlparse.urlparse(link).netloc
                 if subdomain not in self.subdomains and subdomain != self.domain:
                     if self.verbose:
-                        self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                        self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                     self.subdomains.append(subdomain.strip())
         except Exception:
             pass
@@ -450,13 +430,11 @@ class BingEnum(enumratorBaseThreaded):
         return links_list
 
     def generate_query(self):
-        if self.subdomains:
-            fmt = 'domain:{domain} -www.{domain} -{found}'
-            found = ' -'.join(self.subdomains[:self.MAX_DOMAINS])
-            query = fmt.format(domain=self.domain, found=found)
-        else:
-            query = "domain:{domain} -www.{domain}".format(domain=self.domain)
-        return query
+        if not self.subdomains:
+            return "domain:{domain} -www.{domain}".format(domain=self.domain)
+        fmt = 'domain:{domain} -www.{domain} -{found}'
+        found = ' -'.join(self.subdomains[:self.MAX_DOMAINS])
+        return fmt.format(domain=self.domain, found=found)
 
 
 class BaiduEnum(enumratorBaseThreaded):
@@ -472,7 +450,7 @@ class BaiduEnum(enumratorBaseThreaded):
         return
 
     def extract_domains(self, resp):
-        links = list()
+        links = []
         found_newdomain = False
         subdomain_list = []
         link_regx = re.compile('<a.*?class="c-showurl".*?>(.*?)</a>')
@@ -481,14 +459,14 @@ class BaiduEnum(enumratorBaseThreaded):
             for link in links:
                 link = re.sub('<.*?>|>|<|&nbsp;', '', link)
                 if not link.startswith('http'):
-                    link = "http://" + link
+                    link = f"http://{link}"
                 subdomain = urlparse.urlparse(link).netloc
                 if subdomain.endswith(self.domain):
                     subdomain_list.append(subdomain)
                     if subdomain not in self.subdomains and subdomain != self.domain:
                         found_newdomain = True
                         if self.verbose:
-                            self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                            self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                         self.subdomains.append(subdomain.strip())
         except Exception:
             pass
@@ -511,12 +489,12 @@ class BaiduEnum(enumratorBaseThreaded):
         return
 
     def generate_query(self):
-        if self.subdomains and self.querydomain != self.domain:
-            found = ' -site:'.join(self.querydomain)
-            query = "site:{domain} -site:www.{domain} -site:{found} ".format(domain=self.domain, found=found)
-        else:
-            query = "site:{domain} -site:www.{domain}".format(domain=self.domain)
-        return query
+        if not self.subdomains or self.querydomain == self.domain:
+            return "site:{domain} -site:www.{domain}".format(domain=self.domain)
+        found = ' -site:'.join(self.querydomain)
+        return "site:{domain} -site:www.{domain} -site:{found} ".format(
+            domain=self.domain, found=found
+        )
 
 
 class NetcraftEnum(enumratorBaseThreaded):
@@ -544,23 +522,23 @@ class NetcraftEnum(enumratorBaseThreaded):
     def get_next(self, resp):
         link_regx = re.compile('<a.*?href="(.*?)">Next Page')
         link = link_regx.findall(resp)
-        url = 'http://searchdns.netcraft.com' + link[0]
-        return url
+        return f'http://searchdns.netcraft.com{link[0]}'
 
     def create_cookies(self, cookie):
-        cookies = dict()
-        cookies_list = cookie[0:cookie.find(';')].split("=")
-        cookies[cookies_list[0]] = cookies_list[1]
-        # hashlib.sha1 requires utf-8 encoded str
-        cookies['netcraft_js_verification_response'] = hashlib.sha1(urllib.unquote(cookies_list[1]).encode('utf-8')).hexdigest()
-        return cookies
+        cookies_list = cookie[:cookie.find(';')].split("=")
+        return {
+            cookies_list[0]: cookies_list[1],
+            'netcraft_js_verification_response': hashlib.sha1(
+                urllib.unquote(cookies_list[1]).encode('utf-8')
+            ).hexdigest(),
+        }
 
     def get_cookies(self, headers):
-        if 'set-cookie' in headers:
-            cookies = self.create_cookies(headers['set-cookie'])
-        else:
-            cookies = {}
-        return cookies
+        return (
+            self.create_cookies(headers['set-cookie'])
+            if 'set-cookie' in headers
+            else {}
+        )
 
     def enumerate(self):
         start_url = self.base_url.format(domain='example.com')
@@ -572,12 +550,11 @@ class NetcraftEnum(enumratorBaseThreaded):
             self.extract_domains(resp)
             if 'Next Page' not in resp:
                 return self.subdomains
-                break
             url = self.get_next(resp)
             self.should_sleep()
 
     def extract_domains(self, resp):
-        links_list = list()
+        links_list = []
         link_regx = re.compile('<a class="results-table__host" href="(.*?)"')
         try:
             links_list = link_regx.findall(resp)
@@ -587,7 +564,7 @@ class NetcraftEnum(enumratorBaseThreaded):
                     continue
                 if subdomain and subdomain not in self.subdomains and subdomain != self.domain:
                     if self.verbose:
-                        self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                        self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                     self.subdomains.append(subdomain.strip())
         except Exception:
             pass
@@ -611,10 +588,9 @@ class DNSdumpster(enumratorBaseThreaded):
         Resolver.nameservers = ['8.8.8.8', '8.8.4.4']
         self.lock.acquire()
         try:
-            ip = Resolver.query(host, 'A')[0].to_text()
-            if ip:
+            if ip := Resolver.query(host, 'A')[0].to_text():
                 if self.verbose:
-                    self.print_("%s%s: %s%s" % (R, self.engine_name, W, host))
+                    self.print_(f"{R}{self.engine_name}: {W}{host}")
                 is_valid = True
                 self.live_subdomains.append(host)
         except:
@@ -699,7 +675,9 @@ class Virustotal(enumratorBaseThreaded):
             resp = self.send_req(self.url)
             resp = json.loads(resp)
             if 'error' in resp:
-                self.print_(R + "[!] Error: Virustotal probably now is blocking our requests" + W)
+                self.print_(
+                    f"{R}[!] Error: Virustotal probably now is blocking our requests{W}"
+                )
                 break
             if 'links' in resp and 'next' in resp['links']:
                 self.url = resp['links']['next']
@@ -718,7 +696,7 @@ class Virustotal(enumratorBaseThreaded):
                         continue
                     if subdomain not in self.subdomains and subdomain != self.domain:
                         if self.verbose:
-                            self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                            self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                         self.subdomains.append(subdomain.strip())
         except Exception:
             pass
@@ -756,7 +734,7 @@ class ThreatCrowd(enumratorBaseThreaded):
                     continue
                 if subdomain not in self.subdomains and subdomain != self.domain:
                     if self.verbose:
-                        self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                        self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                     self.subdomains.append(subdomain.strip())
         except Exception as e:
             pass
@@ -781,8 +759,7 @@ class CrtSearch(enumratorBaseThreaded):
 
     def enumerate(self):
         url = self.base_url.format(domain=self.domain)
-        resp = self.req(url)
-        if resp:
+        if resp := self.req(url):
             self.extract_domains(resp)
         return self.subdomains
 
@@ -807,11 +784,10 @@ class CrtSearch(enumratorBaseThreaded):
 
                     if subdomain not in self.subdomains and subdomain != self.domain:
                         if self.verbose:
-                            self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                            self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                         self.subdomains.append(subdomain.strip())
         except Exception as e:
             print(e)
-            pass
 
 class PassiveDNS(enumratorBaseThreaded):
     def __init__(self, domain, subdomains=None, q=None, silent=False, verbose=True):
@@ -845,7 +821,7 @@ class PassiveDNS(enumratorBaseThreaded):
             for subdomain in subdomains:
                 if subdomain not in self.subdomains and subdomain != self.domain:
                     if self.verbose:
-                        self.print_("%s%s: %s%s" % (R, self.engine_name, W, subdomain))
+                        self.print_(f"{R}{self.engine_name}: {W}{subdomain}")
                     self.subdomains.append(subdomain.strip())
         except Exception as e:
             pass
@@ -871,8 +847,8 @@ class portscan():
             except Exception:
                 pass
         self.lock.release()
-        if len(openports) > 0:
-            print("%s%s%s - %sFound open ports:%s %s%s%s" % (G, host, W, R, W, Y, ', '.join(openports), W))
+        if openports:
+            print(f"{G}{host}{W} - {R}Found open ports:{W} {Y}{', '.join(openports)}{W}")
 
     def run(self):
         self.lock = threading.BoundedSemaphore(value=20)

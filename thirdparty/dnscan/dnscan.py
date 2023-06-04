@@ -45,44 +45,44 @@ class scanner(threading.Thread):
         self.queue = queue
 
     def get_name(self, domain):
-            global wildcard, addresses
-            try:
-                if sys.stdout.isatty():     # Don't spam output if redirected
-                    sys.stdout.write(domain + "                              \r")
-                    sys.stdout.flush()
-                res = lookup(domain, recordtype)
-                if args.tld and res:
-                    nameservers = sorted(list(res))
-                    ns0 = str(nameservers[0])[:-1]  # First nameserver
-                    print(domain + " - " + col.brown + ns0 + col.end)
-                if args.tld:
-                    if res:
-                        print(domain + " - " + res)
-                    return
-                for rdata in res:
-                    address = rdata.address
-                    if wildcard:
-                        for wildcard_ip in wildcard:
-                            if address == wildcard_ip:
-                                return
+        global wildcard, addresses
+        try:
+            if sys.stdout.isatty():     # Don't spam output if redirected
+                sys.stdout.write(domain + "                              \r")
+                sys.stdout.flush()
+            res = lookup(domain, recordtype)
+            if args.tld and res:
+                nameservers = sorted(list(res))
+                ns0 = str(nameservers[0])[:-1]  # First nameserver
+                print(f"{domain} - {col.brown}{ns0}{col.end}")
+            if args.tld:
+                if res:
+                    print(f"{domain} - {res}")
+                return
+            for rdata in res:
+                address = rdata.address
+                if wildcard:
+                    for wildcard_ip in wildcard:
+                        if address == wildcard_ip:
+                            return
+                if args.domain_first:
+                    print(f"{domain} - {col.brown}{address}{col.end}")
+                else:
+                    print(f"{address} - {col.brown}{domain}{col.end}")
+                if outfile:
                     if args.domain_first:
-                        print(domain + " - " + col.brown + address + col.end)
+                        print(f"{domain} - {address}", file=outfile)
                     else:
-                        print(address + " - " + col.brown + domain + col.end)
-                    if outfile:
-                        if args.domain_first:
-                            print(domain + " - " + address, file=outfile)
-                        else:
-                            print(address + " - " + domain, file=outfile)
-                    try:
-                        addresses.add(ipaddr(unicode(address)))
-                    except NameError:
-                        addresses.add(ipaddr(str(address)))
+                        print(f"{address} - {domain}", file=outfile)
+                try:
+                    addresses.add(ipaddr(unicode(address)))
+                except NameError:
+                    addresses.add(ipaddr(str(address)))
 
-                if domain != target and args.recurse:    # Don't scan root domain twice
-                    add_target(domain)  # Recursively scan subdomains
-            except:
-                pass
+            if domain != target and args.recurse:    # Don't scan root domain twice
+                add_target(domain)  # Recursively scan subdomains
+        except:
+            pass
 
     def run(self):
         while True:
@@ -96,30 +96,30 @@ class scanner(threading.Thread):
 
 class output:
     def status(self, message):
-        print(col.blue + "[*] " + col.end + message)
+        print(f"{col.blue}[*] {col.end}{message}")
         if outfile:
-            print("[*] " + message, file=outfile)
+            print(f"[*] {message}", file=outfile)
 
     def good(self, message):
-        print(col.green + "[+] " + col.end + message)
+        print(f"{col.green}[+] {col.end}{message}")
         if outfile:
-            print("[+] " + message, file=outfile)
+            print(f"[+] {message}", file=outfile)
 
     def verbose(self, message):
         if args.verbose:
-            print(col.brown + "[v] " + col.end + message)
+            print(f"{col.brown}[v] {col.end}{message}")
             if outfile:
-                print("[v] " + message, file=outfile)
+                print(f"[v] {message}", file=outfile)
 
     def warn(self, message):
-        print(col.red + "[-] " + col.end + message)
+        print(f"{col.red}[-] {col.end}{message}")
         if outfile:
-            print("[-] " + message, file=outfile)
+            print(f"[-] {message}", file=outfile)
 
     def fatal(self, message):
         print("\n" + col.red + "FATAL: " + message + col.end)
         if outfile:
-            print("FATAL " + message, file=outfile)
+            print(f"FATAL {message}", file=outfile)
 
 
 class col:
@@ -139,33 +139,30 @@ class col:
 
 def lookup(domain, recordtype):
     try:
-        res = resolver.query(domain, recordtype)
-        return res
+        return resolver.query(domain, recordtype)
     except:
         return
 
 def get_wildcard(target):
 
-    # List of IP's for wildcard DNS
-    wildcards = []
     # Use current unix time as a test subdomain
     epochtime = str(int(time.time()))
-    # Prepend a letter to work around incompetent companies like CableOne
-    # and their stupid attempts at DNS hijacking
-    res = lookup("a" + epochtime + "." + target, recordtype)
-    if res:
+    if res := lookup(f"a{epochtime}.{target}", recordtype):
+        # List of IP's for wildcard DNS
+        wildcards = []
         for res_data in res:
             address = res_data.address
             wildcards.append(address)
-            out.good(col.red + "Wildcard" + col.end + " domain found - " + col.brown + address + col.end)
+            out.good(
+                f"{col.red}Wildcard{col.end} domain found - {col.brown}{address}{col.end}"
+            )
         return wildcards
     else:
         out.verbose("No wildcard domain found")
 
 def get_nameservers(target):
     try:
-        ns = resolver.query(target, 'NS')
-        return ns
+        return resolver.query(target, 'NS')
     except:
         return
 
@@ -174,7 +171,9 @@ def get_v6(target):
     try:
         res = lookup(target, "AAAA")
         if res:
-            out.good("IPv6 (AAAA) records found. Try running dnscan with the "+ col.green + "-6 " + col.end + "option.")
+            out.good(
+                f"IPv6 (AAAA) records found. Try running dnscan with the {col.green}-6 {col.end}option."
+            )
         for v6 in res:
             print(str(v6) + "\n")
             if outfile:
@@ -212,20 +211,21 @@ def get_mx(target):
             print(mx.to_text(), file=outfile)
         mxsub = re.search("([a-z0-9\.\-]+)\."+target, mx.to_text(), re.IGNORECASE)
         try:
-            if mxsub.group(1) and mxsub.group(1) not in wordlist:
-                queue.put(mxsub.group(1) + "." + target)
+            if mxsub[1] and mxsub[1] not in wordlist:
+                queue.put(f"{mxsub[1]}.{target}")
         except AttributeError:
             pass
     print("")
 
 def zone_transfer(domain, ns):
-    out.verbose("Trying zone transfer against " + str(ns))
+    out.verbose(f"Trying zone transfer against {str(ns)}")
     try:
         zone = dns.zone.from_xfr(dns.query.xfr(str(ns), domain, relativize=False),
                                  relativize=False)
-        out.good("Zone transfer sucessful using nameserver " + col.brown + str(ns) + col.end)
-        names = list(zone.nodes.keys())
-        names.sort()
+        out.good(
+            f"Zone transfer sucessful using nameserver {col.brown}{str(ns)}{col.end}"
+        )
+        names = sorted(zone.nodes.keys())
         for n in names:
             print(zone[n].to_text(n))    # Print raw zone
             if outfile:
@@ -236,11 +236,11 @@ def zone_transfer(domain, ns):
 
 def add_target(domain):
     for word in wordlist:
-        queue.put(word + "." + domain)
+        queue.put(f"{word}.{domain}")
 
 def add_tlds(domain):
     for tld in wordlist:
-        queue.put(domain + "." + tld)
+        queue.put(f"{domain}.{tld}")
 
 def get_args():
     global args
@@ -268,13 +268,12 @@ def setup():
         targets = [args.domain]
     if args.tld and not args.wordlist:
         args.wordlist = os.path.join(os.path.dirname(os.path.realpath(__file__)), "tlds.txt")
-    else:
-        if not args.wordlist:   # Try to use default wordlist if non specified
-            args.wordlist = os.path.join(os.path.dirname(os.path.realpath(__file__)), "subdomains.txt")
+    elif not args.wordlist:   # Try to use default wordlist if non specified
+        args.wordlist = os.path.join(os.path.dirname(os.path.realpath(__file__)), "subdomains.txt")
     try:
         wordlist = open(args.wordlist).read().splitlines()
     except:
-        out.fatal("Could not open wordlist " + args.wordlist)
+        out.fatal(f"Could not open wordlist {args.wordlist}")
         sys.exit(1)
 
     # Open file handle for output
@@ -283,13 +282,9 @@ def setup():
     except TypeError:
         outfile = None
     except IOError:
-        out.fatal("Could not open output file: " + args.output_filename)
+        out.fatal(f"Could not open output file: {args.output_filename}")
         sys.exit(1)
-    if args.output_ips:
-        outfile_ips = open(args.output_ips, "w")
-    else:
-        outfile_ips = None
-
+    outfile_ips = open(args.output_ips, "w") if args.output_ips else None
     # Number of threads should be between 1 and 32
     if args.threads < 1:
         args.threads = 1
@@ -326,24 +321,26 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if args.domain_list:
-        out.verbose("Domain list provided, will parse {} for domains.".format(args.domain_list))
+        out.verbose(
+            f"Domain list provided, will parse {args.domain_list} for domains."
+        )
         if not os.path.isfile(args.domain_list):
-            out.fatal("Domain list {} doesn't exist!".format(args.domain_list))
+            out.fatal(f"Domain list {args.domain_list} doesn't exist!")
             sys.exit(1)
         with open(args.domain_list, 'r') as domain_list:
             try:
                 targets = list(filter(bool, domain_list.read().split('\n')))
             except Exception as e:
-                out.fatal("Couldn't read {}, {}".format(args.domain_list, e))
+                out.fatal(f"Couldn't read {args.domain_list}, {e}")
                 sys.exit(1)
     for subtarget in targets:
         global target
         target = subtarget
-        out.status("Processing domain {}".format(target))
+        out.status(f"Processing domain {target}")
         if args.resolver:
-            out.status("Using specified resolver {}".format(args.resolver))
+            out.status(f"Using specified resolver {args.resolver}")
         else:
-            out.status("Using system resolvers {}".format(resolver.nameservers))
+            out.status(f"Using system resolvers {resolver.nameservers}")
         if args.tld:
             if "." in target:
                 out.warn("Warning: TLD scanning works best with just the domain root")
@@ -361,9 +358,9 @@ if __name__ == "__main__":
                     res = lookup(ns, "A")
                     for rdata in res:
                         targetns.append(rdata.address)
-                        print(rdata.address + " - " + col.brown + ns + col.end)
+                        print(f"{rdata.address} - {col.brown}{ns}{col.end}")
                         if outfile:
-                            print(rdata.address + " - " + ns, file=outfile)
+                            print(f"{rdata.address} - {ns}", file=outfile)
                     zone_transfer(target, ns)
             except SystemExit:
                 sys.exit(0)
@@ -378,22 +375,21 @@ if __name__ == "__main__":
             get_v6(target)
             get_txt(target)
             get_mx(target)
-            wildcard = get_wildcard(target)
-            if wildcard:
+            if wildcard := get_wildcard(target):
                 for wildcard_ip in wildcard:
                     try:
                         addresses.add(ipaddr(unicode(wildcard_ip)))
                     except NameError:
                         addresses.add(ipaddr(str(wildcard_ip)))
-            out.status("Scanning " + target + " for " + recordtype + " records")
+            out.status(f"Scanning {target} for {recordtype} records")
             add_target(target)
 
-        for i in range(args.threads):
+        for _ in range(args.threads):
             t = scanner(queue)
             t.setDaemon(True)
             t.start()
         try:
-            for i in range(args.threads):
+            for _ in range(args.threads):
                 t.join(1024)       # Timeout needed or threads ignore exceptions
         except KeyboardInterrupt:
             out.fatal("Caught KeyboardInterrupt, quitting...")

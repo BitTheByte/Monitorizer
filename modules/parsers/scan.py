@@ -7,53 +7,31 @@ class ScanParser(object):
         valid = []
         domains = set(domains)
         regex = r"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9](\.?))$"
-        for domain in domains:
-            if not re.search(regex, domain): continue
-            valid.append(domain)
+        valid.extend(domain for domain in domains if re.search(regex, domain))
         return valid
 
     def amass(self, data):
-        domains = []
-        for line in data:
-            domains.append(line.split()[-1].strip())
+        domains = [line.split()[-1].strip() for line in data]
         return self.check(domains)
 
     def subfinder(self, data):
-        domains = []
-        for line in data:
-            if line[0] == '.':
-                continue
-            domains.append(line.strip())
+        domains = [line.strip() for line in data if line[0] != '.']
         return self.check(domains)
 
     def dnsrecon(self, data):
-        domains = []
-        for idx,line in enumerate(data):
-            if idx == 0:
-                continue
-            domains.append(line.split(",")[1])
+        domains = [line.split(",")[1] for idx, line in enumerate(data) if idx != 0]
         return self.check(domains)
 
     def aiodnsbrute(self, data):
-        domains = []
-        for idx,line in enumerate(data):
-            if idx == 0:
-                continue
-            domains.append(line.split(",")[0])
+        domains = [line.split(",")[0] for idx, line in enumerate(data) if idx != 0]
         return self.check(domains)
 
     def dnscan(self, data):
-        domains = []
-        for line in data:
-            if not '-' in line:
-                continue
-            domains.append(line.split()[-1].strip())
+        domains = [line.split()[-1].strip() for line in data if '-' in line]
         return self.check(domains)
 
     def default(self, data):
-        domains = []
-        for line in data:
-            domains.append(line.strip())
+        domains = [line.strip() for line in data]
         return self.check(domains)
 
     def parse(self, scan_file):

@@ -66,27 +66,19 @@ while 1:
         new_domains = monitorizer.merge_scans(current_scan)
         old_domains = monitorizer.merge_reports(target, exclude=[report_name])
 
-        if len(old_domains) > 0:
-            new_domains = new_domains - old_domains
-        else:
-            new_domains = []
-
+        new_domains = new_domains - old_domains if len(old_domains) > 0 else []
         new_domains_filtered = {}
         for domain in new_domains:
             if not domain.strip():
                 continue
-            foundby = []
-            for tool, subs in current_scan.items():
-                if not domain in subs:
-                    continue
-                foundby.append(tool)
-            new_domains_filtered.update({domain: foundby})
+            foundby = [tool for tool, subs in current_scan.items() if domain in subs]
+            new_domains_filtered[domain] = foundby
 
         if new_domains_filtered != {}:
             events.discover(new_domains_filtered, report_name)
 
-        #if not args.debug:
-        #    monitorizer.clean_temp()
+            #if not args.debug:
+            #    monitorizer.clean_temp()
 
     flags.status = "idle"
     monitorizer.info(f"All targets scanned, sleeping for {flags.sleep_time} hour(s)")
