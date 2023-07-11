@@ -94,7 +94,7 @@ class Monitorizer(ScanParser, Console):
     def init_dirs(self):
         for dir_name in self.create_dirs:
             if os.path.isdir(dir_name): continue
-            os.mkdir(dir_name)
+            os.makedirs(dir_name,exist_ok=True) #Won't throw an exception if directory already exists.
             self.log(f"Created new directory :: {dir_name}")
 
     def set_permissions(self):
