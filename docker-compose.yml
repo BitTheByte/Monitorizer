@@ -42,7 +42,7 @@ services:
   report_worker:
     restart: always
     image: ghcr.io/bitthebyte/monitorizer:main
-    command: celery -A monitorizer.server worker -Q reports -P threads -l info
+    command: celery -A monitorizer.server worker -Q reports -l info
     depends_on:
       - db
     environment:
@@ -54,7 +54,7 @@ services:
     restart: always
     privileged: true
     image: ghcr.io/bitthebyte/monitorizer:main
-    command: celery -A monitorizer.server worker -Q default -P threads -l info
+    command: celery -A monitorizer.server worker -Q default -l info
     depends_on:
       - db
     environment:
