@@ -45,6 +45,10 @@ Once everything is ready you will be able to login to the dashboard at http://12
 | admin    | monitorizer@bitthebyte.com | P@ssW0rd |
 
 # Features
+### Dark-Light Mode
+![](assets/dash_light.png)
+
+![](assets/scans_dark.png)
 
 ### Scalable 
 Monitorizer fully designed to run on large scale and handle thousands of distributed operations effortlessly  
