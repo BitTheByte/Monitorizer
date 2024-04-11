@@ -40,8 +40,6 @@ $ curl https://raw.githubusercontent.com/BitTheByte/Monitorizer/main/docker-comp
 ### Default Credentials:
 Once everything is ready you will be able to login to the dashboard at http://127.0.0.1:8000/dashboard/
 
-![](assets/login.png)
-
 | Username | Email                      | Password |
 |----------|----------------------------|----------|
 | admin    | monitorizer@bitthebyte.com | P@ssW0rd |
