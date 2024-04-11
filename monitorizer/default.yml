@@ -1,7 +1,7 @@
 commands:
   - id: 756db6c3-f2d2-4dd7-8b9e-1ce71772567e
     name: subfinder
-    cmd: docker run -v /home/.monitorizer:/home/.monitorizer --rm projectdiscovery/subfinder:latest -d {domain} -o {output:file}
+    cmd: docker run -v /home/.monitorizer:/home/.monitorizer --rm projectdiscovery/subfinder:latest -d {domain} -o {output:file} -all
     parser: |
       import os
 
