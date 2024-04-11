@@ -1,0 +1,58 @@
+{% extends 'unfold/layouts/base_simple.html' %}
+
+{% load cache i18n %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}
+{% if subtitle %}
+{{ subtitle }} |
+{% endif %}
+
+{{ title }} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        {{ site_header|default:_('Django administration') }}
+    </a>
+</h1>
+{% endblock %}
+
+{% block content %}
+
+    {% component "unfold/components/container.html" %}
+        {% component "unfold/components/flex.html" with class="gap-4" %}
+            {% component "unfold/components/navigation.html" with items=navigation %}{% endcomponent %}
+            {% component "unfold/components/navigation.html" with class="ml-auto" items=filters %}{% endcomponent %}
+        {% endcomponent %}
+
+        {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
+            {%for card in cards%}
+                {% component "unfold/components/card.html" with class="lg:w-1/3"  label=card.label %}
+                    {% component "unfold/components/text.html" %}
+                        {{ card.title }}
+                    {% endcomponent %}
+                    {% component "unfold/components/title.html" %}
+                        {{ card.value }}
+                    {% endcomponent %}
+                {% endcomponent %}
+            {% endfor %}
+        {% endcomponent %}
+
+        {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
+            {% component "unfold/components/card.html" with class="lg:w-1/2" title="Scans Activity Per Day" %}
+                {% component "unfold/components/chart/bar.html" with data=activity_per_day_chart height=320 options=DEFAULT_CHART_OPTIONS %}{% endcomponent %}
+            {% endcomponent %}
+            {% component "unfold/components/card.html" with class="lg:w-1/2" title="Top Discovered Domains" %}
+                {% component "unfold/components/flex.html" with col=1 class="gap-8" %}
+                    {% component "admin/components/chart/polarArea.html" with data=discovered_breakdown options=DEFAULT_CHART_OPTIONS %}{% endcomponent %}
+                {% endcomponent %}
+            {% endcomponent %}
+        {% endcomponent %}
+
+    {% endcomponent %}
+
+
+{% endblock %}
