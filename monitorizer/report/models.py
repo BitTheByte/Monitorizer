@@ -7,8 +7,10 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django_celery_beat.models import IntervalSchedule, PeriodicTask
 
+from monitorizer.server.models import BaseModel
 
-class Report(models.Model):
+
+class Report(BaseModel):
     class FilterTypes(models.TextChoices):
         STARTS_WITH = "value__startswith", "Starts with"
         ENDS_WITH = "value__endswith", "Ends with"
