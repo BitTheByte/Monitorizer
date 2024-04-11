@@ -1,4 +1,6 @@
+from django import forms
 from django.contrib import admin
+from django_ace import AceWidget
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from unfold.admin import ModelAdmin, StackedInline
@@ -116,12 +118,34 @@ class DomainScanAdmin(ModelAdmin, ImportExportModelAdmin):
         return models.DomainScan.objects.order_by("-created_at")
 
 
+class CommandTemplateForm(forms.ModelForm):
+    class Meta:
+        model = models.CommandTemplate
+        fields = "__all__"
+        widgets = {
+            "parser": AceWidget(
+                mode="python",
+                theme="dracula",
+                wordwrap=False,
+                width="100%",
+                showprintmargin=True,
+                showinvisibles=False,
+                usesofttabs=True,
+                fontsize="14px",
+                toolbar=False,
+                showgutter=True,
+                behaviours=True,
+            ),
+        }
+
+
 @admin.register(models.CommandTemplate)
 class CommandTemplateAdmin(ModelAdmin, ImportExportModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
     resource_class = CommandTemplateResource
     list_display = ["id", "name"]
+    form = CommandTemplateForm
 
     def get_queryset(self, request):
         return models.CommandTemplate.objects.order_by("-created_at")

@@ -210,6 +210,7 @@ INSTALLED_APPS = [
     "unfold.contrib.forms",
     "unfold.contrib.import_export",
     "debug_toolbar",
+    "django_ace",
     "import_export",
     "django_celery_beat",
     "django.contrib.admin",
