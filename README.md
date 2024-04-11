@@ -64,3 +64,5 @@ Employ a zero-code strategy to integrate your own tools for domain enumeration a
 ### Advanced Search
 Utilize the dashboard to conduct comprehensive searches across all Monitorizer assets. This feature allows for quick location of necessary data points, streamlined through an intuitive search interface.
 
+### Import-Export
+Utilize the dashboard to import and export assets easily
