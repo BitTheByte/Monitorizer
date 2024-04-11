@@ -20,6 +20,10 @@ UNFOLD = {
     "SITE_TITLE": "Monitorizer",
     "SITE_HEADER": "Monitorizer",
     "DASHBOARD_CALLBACK": "monitorizer.inventory.callback.dashboard_callback",
+    "ENVIRONMENT": "monitorizer.inventory.callback.environment_callback",
+    "LOGIN": {
+        "image": lambda request: "https://c0.wallpaperflare.com/preview/1/703/828/fighter-jet-airshow.jpg",
+    },
     "TABS": [
         {
             "models": ["inventory.seeddomain", "inventory.discovereddomain"],
@@ -180,7 +184,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-!of9a9=_^at8&*oa#$fy0%)d)k&91qchx7-1*4ddz8(ugs12_d"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", False))
 
 ALLOWED_HOSTS = ["*"]
 # APPEND_SLASH = True

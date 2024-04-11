@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.db.models import Count, Q
 
 from monitorizer.inventory import models
@@ -35,6 +36,13 @@ DEFAULT_CHART_OPTIONS = {
         "tooltip": {"enabled": True},
     },
 }
+
+
+def environment_callback(request):
+    if settings.DEBUG:
+        return ["Development", "warning"]
+
+    return ["Production", "info"]
 
 
 def dashboard_callback(request, context):
