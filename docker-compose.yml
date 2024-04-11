@@ -17,7 +17,7 @@ services:
   web:
     build: .
     restart: always
-    image: localhost/monitorizer:latest
+    image: ghcr.io/bitthebyte/monitorizer:main
     command: /webserver-entrypoint.sh
     environment:
       POSTGRES_HOST: db
@@ -30,7 +30,7 @@ services:
 
   beat_worker:
     restart: always
-    image: localhost/monitorizer:latest
+    image: ghcr.io/bitthebyte/monitorizer:main
     command: celery -A monitorizer.server beat -l info
     depends_on:
       - db
@@ -41,7 +41,7 @@ services:
 
   report_worker:
     restart: always
-    image: localhost/monitorizer:latest
+    image: ghcr.io/bitthebyte/monitorizer:main
     command: celery -A monitorizer.server worker -Q reports -P threads -l info
     depends_on:
       - db
@@ -53,7 +53,7 @@ services:
   job_worker:
     restart: always
     privileged: true
-    image: localhost/monitorizer:latest
+    image: ghcr.io/bitthebyte/monitorizer:main
     command: celery -A monitorizer.server worker -Q default -P threads -l info
     depends_on:
       - db
