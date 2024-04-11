@@ -8,7 +8,7 @@ from monitorizer.report import models
 from monitorizer.server import celery_app
 
 MESSAGE_TEMPLATE = """
-Monitorizer has discovered new %i domain(s) in since %s
+Monitorizer has discovered new %i domain(s) since %s
 Filter Type: %s
 Filter Value: %s 
 """

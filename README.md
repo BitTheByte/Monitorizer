@@ -44,3 +44,23 @@ Once everything is ready you will be able to login to the dashboard at http://12
 |----------|----------------------------|----------|
 | admin    | monitorizer@bitthebyte.com | P@ssW0rd |
 
+# Features
+
+### Events
+Monitorizer supports various reporting channels to ensure you're always informed.
+
+**Telegram**: Updates and alerts are directly sent to your specified Telegram channel, allowing for instant notifications and immediate team collaboration.
+
+![](assets/telegram_report.png)
+
+**Webhook**: Receive detailed reports and alerts through your webhook server to keep you aligned.
+
+![](assets/discord_report.png)
+
+
+### Extendable
+Employ a zero-code strategy to integrate your own tools for domain enumeration and discovery effortlessly. Customize and extend functionalities without writing any new code.
+
+### Advanced Search
+Utilize the dashboard to conduct comprehensive searches across all Monitorizer assets. This feature allows for quick location of necessary data points, streamlined through an intuitive search interface.
+
