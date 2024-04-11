@@ -46,6 +46,9 @@ Once everything is ready you will be able to login to the dashboard at http://12
 
 # Features
 
+### Scalable 
+Monitorizer fully designed to run on large scale and handle thousands of distributed operations effortlessly  
+
 ### Events
 Monitorizer supports various reporting channels to ensure you're always informed.
 
