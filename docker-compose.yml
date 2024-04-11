@@ -31,7 +31,7 @@ services:
   beat_worker:
     restart: always
     image: ghcr.io/bitthebyte/monitorizer:main
-    command: celery -A monitorizer.server beat -l info -c 32
+    command: celery -A monitorizer.server beat -l info
     depends_on:
       - db
     environment:
