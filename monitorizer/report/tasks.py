@@ -32,7 +32,7 @@ def send_report_result(report_channel_type, channel_pk):
     message = MESSAGE_TEMPLATE % (
         len(domains),
         str(report.last_executed),
-        report.filter_type,
+        report.filter_type.get_display(),
         report.filter_value,
     )
 
