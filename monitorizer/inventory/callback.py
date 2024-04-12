@@ -9,16 +9,11 @@ DEFAULT_CHART_OPTIONS = {
     "barPercentage": 1,
     "base": 0,
     "grouped": True,
-    "maxBarThickness": 4,
+    "maxBarThickness": 6,
     "responsive": True,
     "maintainAspectRatio": False,
     "datasets": {
-        "bar": {
-            "borderRadius": 12,
-            "border": {"width": 0},
-            "borderSkipped": "middle",
-        },
-        "line": {"borderWidth": 2, "pointBorderWidth": 0, "pointStyle": False},
+        "bar": {"borderRadius": 12, "border": {"width": 0}, "borderSkipped": "middle"},
     },
     "plugins": {
         "legend": {
@@ -86,22 +81,22 @@ def dashboard_callback(request, context):
                         {
                             "label": "Pending",
                             "data": [v["pending"] for v in scans_per_day.values()],
-                            "backgroundColor": "#faf20a",
+                            "backgroundColor": "#f6ad55",
                         },
                         {
                             "label": "Running",
                             "data": [v["running"] for v in scans_per_day.values()],
-                            "backgroundColor": "#1f85e5",
+                            "backgroundColor": "#63b3ed",
                         },
                         {
                             "label": "Success",
                             "data": [v["success"] for v in scans_per_day.values()],
-                            "backgroundColor": "#0ad153",
+                            "backgroundColor": "#48bb78",
                         },
                         {
                             "label": "Error",
                             "data": [v["error"] for v in scans_per_day.values()],
-                            "backgroundColor": "#f54257",
+                            "backgroundColor": "#f56565",
                         },
                     ],
                 }

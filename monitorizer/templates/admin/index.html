@@ -47,7 +47,7 @@
             {% endcomponent %}
             {% component "unfold/components/card.html" with class="lg:w-1/2" title="Top Discovered Domains" %}
                 {% component "unfold/components/flex.html" with col=1 class="gap-8" %}
-                    {% component "admin/components/chart/polarArea.html" with data=discovered_breakdown options=DEFAULT_CHART_OPTIONS %}{% endcomponent %}
+                    {% component "admin/components/chart/pie.html" with data=discovered_breakdown options=DEFAULT_CHART_OPTIONS %}{% endcomponent %}
                 {% endcomponent %}
             {% endcomponent %}
         {% endcomponent %}
