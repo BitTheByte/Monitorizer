@@ -39,10 +39,9 @@ DEFAULT_CHART_OPTIONS = {
 
 
 def environment_callback(request):
-    if settings.DEBUG:
-        return ["Development", "warning"]
-
-    return ["Production", "info"]
+    if not settings.DEBUG:
+        return
+    return ["Development", "warning"]
 
 
 def dashboard_callback(request, context):
