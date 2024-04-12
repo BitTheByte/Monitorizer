@@ -27,6 +27,15 @@ def execute_scan_descriptor(descriptor_pk):
     descriptor = models.ScanAutoSubmitter.objects.get(pk=descriptor_pk)
     if not descriptor.domain.enabled:
         return
+
+    if (
+        models.DomainScan.objects.filter(
+            status=models.DomainScan.ScanStatus.PENDING
+        ).count()
+        > 1500
+    ):
+        return
+
     for command in descriptor.commands.all():
         models.DomainScan.objects.create(
             descriptor=descriptor,

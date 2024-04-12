@@ -79,7 +79,10 @@ class DomainScan(BaseModel):
 
     domain = models.ForeignKey(SeedDomain, on_delete=models.CASCADE, blank=True)
     status = models.CharField(
-        choices=ScanStatus.choices, max_length=32, default=ScanStatus.PENDING
+        choices=ScanStatus.choices,
+        max_length=32,
+        default=ScanStatus.PENDING,
+        db_index=True,
     )
     command_tpl = models.ForeignKey(CommandTemplate, on_delete=models.CASCADE)
     command_tpl_vars = models.JSONField(null=True, blank=True)
