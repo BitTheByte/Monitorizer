@@ -18,7 +18,7 @@ def at_start(sender, **k):
         PeriodicTask.objects.get_or_create(
             name=task.name,
             task=task.name,
-            interval=schedule,
+            defaults={"interval": schedule},
         )
 
 
