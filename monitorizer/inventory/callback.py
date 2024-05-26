@@ -58,6 +58,7 @@ def dashboard_callback(request, context):
                 "status", filter=Q(status=models.DomainScan.ScanStatus.PENDING)
             ),
         )
+        .order_by("created_day")[:30]
     }
     top_seeds = {
         group["seeds__value"]: group["count"]
