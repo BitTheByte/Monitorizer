@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "^5.0.3"
-celery = {extras = ["redis"], version = "^5.3.6"}
+celery = {extras = ["amqp"], version = "^5.4.0"}
 django-unfold = "^0.21.1"
 django-celery-beat = "^2.6.0"
 django-import-export = "^3.3.7"
