@@ -10,17 +10,37 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "postgres" ]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - AUTH_TYPE=scram-sha-256
+      - POOL_MODE=transaction
+      - ADMIN_USERS=postgres,dbuser
   redis:
     image: redis:latest
+    command: --appendonly no --save ""
     restart: always
-
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 5s
+      timeout: 60s
+      retries: 5
   web:
     build: .
     restart: always
     image: ghcr.io/bitthebyte/monitorizer:main
     command: /webserver-entrypoint.sh
     environment:
-      POSTGRES_HOST: db
+      POSTGRES_HOST: pgbouncer
       CELERY_BROKER_URL: 'redis://redis:6379/0'
       CELERY_RESULT_BACKEND: 'redis://redis:6379/0'
     ports:
@@ -34,10 +54,11 @@ services:
     command: celery -A monitorizer.server beat -l info
     depends_on:
       - db
+      - redis
     environment:
       CELERY_BROKER_URL: 'redis://redis:6379/0'
       CELERY_RESULT_BACKEND: 'redis://redis:6379/0'
-      POSTGRES_HOST: db
+      POSTGRES_HOST: pgbouncer
 
   report_worker:
     restart: always
@@ -45,10 +66,11 @@ services:
     command: celery -A monitorizer.server worker -Q reports -l info
     depends_on:
       - db
+      - redis
     environment:
       CELERY_BROKER_URL: 'redis://redis:6379/0'
       CELERY_RESULT_BACKEND: 'redis://redis:6379/0'
-      POSTGRES_HOST: db
+      POSTGRES_HOST: pgbouncer
 
   job_worker:
     restart: always
@@ -57,10 +79,11 @@ services:
     command: celery -A monitorizer.server worker -Q default -l info
     depends_on:
       - db
+      - redis
     environment:
       CELERY_BROKER_URL: 'redis://redis:6379/0'
       CELERY_RESULT_BACKEND: 'redis://redis:6379/0'
-      POSTGRES_HOST: db
+      POSTGRES_HOST: pgbouncer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/.monitorizer:/home/.monitorizer:shared
