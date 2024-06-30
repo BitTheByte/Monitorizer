@@ -16,15 +16,15 @@ services:
       timeout: 60s
       retries: 5
   pgbouncer:
-    image: edoburu/pgbouncer:latest
+    image: bitnami/pgbouncer:latest
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - AUTH_TYPE=scram-sha-256
-      - POOL_MODE=transaction
-      - ADMIN_USERS=postgres,dbuser
+      - POSTGRESQL_HOST=db
+      - PGBOUNCER_PORT=5432
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - PGBOUNCER_MAX_CLIENT_CONN=10000
+      - PGBOUNCER_DEFAULT_POOL_SIZE=512
+      - PGBOUNCER_POOL_MODE=transaction
   rabbitmq:
     image: rabbitmq:3-management-alpine
     restart: always
